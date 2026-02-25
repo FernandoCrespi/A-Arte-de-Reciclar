@@ -41,12 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Personagens
-    uniqueID: 3868492799
+  - name: Cenario
+    uniqueID: 4227901797
+    locked: 0
+  - name: chao
+    uniqueID: 257163075
     locked: 0
   - name: decorativo
     uniqueID: 689923117
     locked: 0
-  - name: chao
-    uniqueID: 257163075
+  - name: Personagens
+    uniqueID: 3868492799
     locked: 0
