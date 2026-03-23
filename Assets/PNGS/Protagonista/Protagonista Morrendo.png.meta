@@ -1,25 +1,43 @@
 fileFormatVersion: 2
-guid: d0b229c4d8432ee468660f0dfb8fd36e
+guid: 7a6bf9e2ad2759b4ebad75f1c5f752ca
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2122652195152443063
-    second: InimigoLixoAtacando_0
+      213: 1220562777166307020
+    second: Protagonista Morrendo_0
   - first:
-      213: 3153118722059699741
-    second: InimigoLixoAtacando_1
+      213: -8740198871402907053
+    second: Protagonista Morrendo_1
   - first:
-      213: -4077506990879920972
-    second: InimigoLixoAtacando_2
+      213: -619315377344478521
+    second: Protagonista Morrendo_2
   - first:
-      213: 4615107180385425322
-    second: InimigoLixoAtacando_3
+      213: 5059048804030272722
+    second: Protagonista Morrendo_3
   - first:
-      213: 2391332794679490971
-    second: InimigoLixoAtacando_4
+      213: -8956923290623741578
+    second: Protagonista Morrendo_4
   - first:
-      213: -2124053026287773876
-    second: InimigoLixoAtacando_5
+      213: -5000969867520100018
+    second: Protagonista Morrendo_5
+  - first:
+      213: 7078651195474073024
+    second: Protagonista Morrendo_6
+  - first:
+      213: -7460890203036183404
+    second: Protagonista Morrendo_7
+  - first:
+      213: 1345913116166893121
+    second: Protagonista Morrendo_8
+  - first:
+      213: 225789038159287659
+    second: Protagonista Morrendo_9
+  - first:
+      213: 1932730017725863501
+    second: Protagonista Morrendo_10
+  - first:
+      213: -1459884981622336429
+    second: Protagonista Morrendo_11
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -111,157 +129,152 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: InimigoLixoAtacando_0
+      name: Protagonista Morrendo_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 127
-        width: 38
-        height: 59
+        x: 0
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 9494c362313da82e0800000000000000
-      internalID: -2122652195152443063
+      spriteID: feba2228682162148918b70a2ba3aaed
+      internalID: 1967728023
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_1
+      name: Protagonista Morrendo_1
       rect:
         serializedVersion: 2
-        x: 77
-        y: 127
-        width: 38
-        height: 57
+        x: 64
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d16800395c022cb20800000000000000
-      internalID: 3153118722059699741
+      spriteID: 0668dd554a429ab4092df5201d2d50b9
+      internalID: -453767099
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_2
+      name: Protagonista Morrendo_2
       rect:
         serializedVersion: 2
-        x: 13
-        y: 63
-        width: 38
-        height: 54
+        x: 128
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 4bc2e6fcef8c967c0800000000000000
-      internalID: -4077506990879920972
+      spriteID: b916689587d243c44b62c841fb812efe
+      internalID: 1890229180
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_3
+      name: Protagonista Morrendo_3
       rect:
         serializedVersion: 2
-        x: 77
-        y: 65
-        width: 38
-        height: 49
+        x: 0
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: aa75a3757872c0040800000000000000
-      internalID: 4615107180385425322
+      spriteID: 18fcd5b56c0478240bfe031e802ee567
+      internalID: -40480517
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_4
+      name: Protagonista Morrendo_4
       rect:
         serializedVersion: 2
-        x: 11
-        y: 1
-        width: 38
-        height: 49
+        x: 64
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b99fc96c188bf2120800000000000000
-      internalID: 2391332794679490971
+      spriteID: 345de7cc2916f504fa3b6360c081dd52
+      internalID: -613231286
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_5
+      name: Protagonista Morrendo_5
       rect:
         serializedVersion: 2
-        x: 75
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d34280cecf4a988428ea864fc88d96fe
+      internalID: -395681077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protagonista Morrendo_6
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 0
-        width: 36
-        height: 50
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c47160cb609d582e0800000000000000
-      internalID: -2124053026287773876
+      spriteID: 8fb951a0f4568b744bd1066b1dd4a13b
+      internalID: 189390338
       vertices: []
       indices: 
       edges: []
@@ -269,7 +282,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 6597f556483c50a498361989a6b9d0e9
     internalID: 0
     vertices: []
     indices: 
@@ -277,12 +290,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      InimigoLixoAtacando_0: -2122652195152443063
-      InimigoLixoAtacando_1: 3153118722059699741
-      InimigoLixoAtacando_2: -4077506990879920972
-      InimigoLixoAtacando_3: 4615107180385425322
-      InimigoLixoAtacando_4: 2391332794679490971
-      InimigoLixoAtacando_5: -2124053026287773876
+      Protagonista Morrendo_0: 1967728023
+      Protagonista Morrendo_1: -453767099
+      Protagonista Morrendo_2: 1890229180
+      Protagonista Morrendo_3: -40480517
+      Protagonista Morrendo_4: -613231286
+      Protagonista Morrendo_5: -395681077
+      Protagonista Morrendo_6: 189390338
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

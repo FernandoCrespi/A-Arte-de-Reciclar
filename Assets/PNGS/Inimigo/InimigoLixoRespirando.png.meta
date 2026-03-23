@@ -228,7 +228,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      InimigoLixoRespirando_0: 1444822335721814866
+      InimigoLixoRespirando_1: 6518561871303566210
+      InimigoLixoRespirando_2: 8457629068767904467
+      InimigoLixoRespirando_3: 1301037417930403432
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

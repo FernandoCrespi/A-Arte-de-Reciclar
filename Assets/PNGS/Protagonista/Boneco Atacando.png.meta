@@ -228,7 +228,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Boneco Atacando_0: 1651503405197062204
+      Boneco Atacando_1: 8652207167453396382
+      Boneco Atacando_2: -2927186605162299193
+      Boneco Atacando_3: -6276300179134769057
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

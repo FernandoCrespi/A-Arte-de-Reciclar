@@ -228,7 +228,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      InimigoLixoAndando_0: 7270193738671376228
+      InimigoLixoAndando_1: 7505130244298541316
+      InimigoLixoAndando_2: -5280135497059169836
+      InimigoLixoAndando_3: -3591743411771958044
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
