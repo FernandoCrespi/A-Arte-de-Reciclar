@@ -1,17 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using UnityEngine.SceneManagement;
 
 public class Saude : MonoBehaviour
 {
-
     public bool morto;
-    public int saude;
+    public int saude = 100;
     private Animator animator;
 
-    // Use this for initialization
     void Start()
     {
         morto = false;
@@ -30,8 +27,26 @@ public class Saude : MonoBehaviour
         {
             morto = true;
             animator.SetTrigger("Morte");
+
+            // === DESABILITA MOVIMENTO ===
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if (rb)
+            {
+                rb.velocity = Vector2.zero;
+                rb.simulated = false;
+            }
+
+            MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scripts)
+            {
+                if (script != this && script != animator)
+                {
+                    script.enabled = false;
+                }
+            }
+
             if (gameObject.tag == "Player")
-            {  // Só reicicia a fase se quem morreu foi o jogador.
+            {
                 StartCoroutine(morre());
             }
         }
@@ -42,8 +57,26 @@ public class Saude : MonoBehaviour
         saude = 0;
         morto = true;
         animator.SetTrigger("Morte");
+
+        // === DESABILITA MOVIMENTO ===
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb)
+        {
+            rb.velocity = Vector2.zero;
+            rb.simulated = false;
+        }
+
+        MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in scripts)
+        {
+            if (script != this && script != animator)
+            {
+                script.enabled = false;
+            }
+        }
+
         if (gameObject.tag == "Player")
-        {  // Só reicicia a fase se quem morreu foi o jogador.
+        {
             StartCoroutine(morre());
         }
     }
