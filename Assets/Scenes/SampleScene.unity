@@ -2013,7 +2013,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 849307995}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1189dfcb2d88844d8f8bed6a1bccd24, type: 3}
   m_Name: 
@@ -2041,7 +2041,7 @@ Rigidbody2D:
   m_Mass: 20
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -2060,7 +2060,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 849307995}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5995ae73f522cc14e93dc3c097402e1e, type: 3}
   m_Name: 
@@ -3271,7 +3271,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1408824175
 Transform:
   m_ObjectHideFlags: 0
@@ -4810,6 +4810,10 @@ PrefabInstance:
     - target: {fileID: 2348345030625650422, guid: f12aea35ef5017d4584f19dab481d230, type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3799920098880693479, guid: f12aea35ef5017d4584f19dab481d230, type: 3}
+      propertyPath: teclaAtaque
+      value: 101
       objectReference: {fileID: 0}
     - target: {fileID: 6557981022486551180, guid: f12aea35ef5017d4584f19dab481d230, type: 3}
       propertyPath: m_LocalPosition.x

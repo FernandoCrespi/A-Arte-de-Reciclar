@@ -9,7 +9,6 @@ public class Controle : MonoBehaviour
     public Transform terra;
     public LayerMask chao;
 
-
     public KeyCode teclaDireita = KeyCode.D;
     public KeyCode teclaEsquerda = KeyCode.A;
     public KeyCode teclaPulo = KeyCode.Space;
@@ -20,6 +19,9 @@ public class Controle : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb;
 
+    [Header("Ataque")]
+    public KeyCode teclaAtaque = KeyCode.J; // Tecla que dispara a animação de ataque
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -29,6 +31,7 @@ public class Controle : MonoBehaviour
     void Update()
     {
         moveJogador();
+        Atacar(); // Verifica se deve disparar animação de ataque
     }
 
     private void LateUpdate()
@@ -99,6 +102,16 @@ public class Controle : MonoBehaviour
         if (outro.gameObject.CompareTag("PlataformaMovel"))
         {
             transform.parent = null;
+        }
+    }
+
+    // ================= Ataque =================
+    void Atacar()
+    {
+        if (Input.GetKeyDown(teclaAtaque))
+        {
+            // Apenas dispara a animação de ataque
+            animator.SetTrigger("Ataque");
         }
     }
 }
