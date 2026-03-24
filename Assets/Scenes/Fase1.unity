@@ -1856,9 +1856,10 @@ GameObject:
   - component: {fileID: 849308002}
   - component: {fileID: 849308000}
   - component: {fileID: 849308005}
+  - component: {fileID: 849308006}
   m_Layer: 6
   m_Name: Inimigo
-  m_TagString: Untagged
+  m_TagString: Inimigo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2004,7 +2005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf88443c7713cc43bf705140a229e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  morto: 0
+  morto: 1
   saude: 4
 --- !u!114 &849308002
 MonoBehaviour:
@@ -2022,7 +2023,7 @@ MonoBehaviour:
   pontos:
   - {fileID: 1433424025}
   - {fileID: 394165759}
-  velocidade: 3
+  velocidade: 5
   espera: 1
   loop: 1
   atacando: 0
@@ -2071,6 +2072,19 @@ MonoBehaviour:
   danoDash: 30
   estaDashando: 0
   podeDash: 1
+--- !u!114 &849308006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849307995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3931f81cac0645144a8d8a9f578ada0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tempoParaSumir: 1
 --- !u!1 &897361783
 GameObject:
   m_ObjectHideFlags: 0
