@@ -21,7 +21,6 @@ public class Saude : MonoBehaviour
 
     public void dano(int x)
     {
-        Debug.Log("Entrei dano");
         saude -= x;
         if (saude <= 0)
         {
