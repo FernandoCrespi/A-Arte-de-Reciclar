@@ -89,22 +89,6 @@ public class Controle : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D outro)
-    {
-        if (outro.gameObject.CompareTag("PlataformaMovel"))
-        {
-            transform.parent = outro.transform;
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D outro)
-    {
-        if (outro.gameObject.CompareTag("PlataformaMovel"))
-        {
-            transform.parent = null;
-        }
-    }
-
     // ================= Ataque =================
     void Atacar()
     {

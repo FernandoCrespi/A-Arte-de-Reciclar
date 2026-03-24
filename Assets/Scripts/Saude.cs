@@ -27,6 +27,7 @@ public class Saude : MonoBehaviour
         {
             morto = true;
             animator.SetTrigger("Morte");
+            GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
 
             // === DESABILITA MOVIMENTO ===
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
@@ -69,11 +70,12 @@ public class Saude : MonoBehaviour
         MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts)
         {
-            if (script != this && script != animator)
+            if (script != this && script != animator && script.GetType() != typeof(DestrutorPorTempo))
             {
                 script.enabled = false;
             }
         }
+
 
         if (gameObject.tag == "Player")
         {
