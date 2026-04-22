@@ -3,26 +3,17 @@ using UnityEngine;
 
 public class DashInimigo : MonoBehaviour
 {
-    [Header("Configurações")]
-    public float velocidadeDash = 18f;
-    public float tempoDash = 0.5f;
-    public float tempoCooldown = 2.5f;
-    public int danoDash = 30;
+    public float velocidadeDash = 20f;
+    public float tempoDeDash = 0.3f;
+    public float cooldown = 2f;
 
-    [HideInInspector] public bool estaDashando = false;
+    [HideInInspector] public bool estaDashando;
     [HideInInspector] public bool podeDash = true;
 
-    private IAInimigoRonda iaRonda;
-    private Saude saude;
-    private Animator animator;
     private Rigidbody2D rb;
-    private Vector2 direcaoDash;
 
-    void Start()
+    void Awake()
     {
-        iaRonda = GetComponent<IAInimigoRonda>();
-        saude = GetComponent<Saude>();
-        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -30,73 +21,29 @@ public class DashInimigo : MonoBehaviour
     {
         if (!podeDash || estaDashando) return;
 
-        Debug.Log("🚀 DASH INICIADO!");
-
-        podeDash = false;
-        estaDashando = true;
-        direcaoDash = direcao.normalized;
-
-        animator.SetTrigger("Ataque");
-        animator.speed = 1.5f;
-
-        if (rb) rb.velocity = Vector2.zero;
-        if (iaRonda) iaRonda.enabled = false;
-
-        StartCoroutine(ExecutaDash());
+        // força só horizontal
+        float dir = Mathf.Sign(direcao.x);
+        StartCoroutine(Dash(dir));
     }
 
-    IEnumerator ExecutaDash()
+    IEnumerator Dash(float dir)
     {
-        float tempoInicio = Time.time;
+        estaDashando = true;
+        podeDash = false;
 
-        while (Time.time < tempoInicio + tempoDash)
+        float tempo = 0;
+
+        while (tempo < tempoDeDash)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, direcaoDash, 0.5f);
-            if (hit.collider != null && hit.collider.CompareTag("Player"))
-            {
-                AplicaDano(hit.collider);
-                yield break;
-            }
-
-            transform.position += (Vector3)(direcaoDash * velocidadeDash * Time.deltaTime);
+            rb.velocity = new Vector2(dir * velocidadeDash, 0);
+            tempo += Time.deltaTime;
             yield return null;
         }
 
-        FinalizaDash();
-    }
-
-    void FinalizaDash()
-    {
-        Debug.Log("✅ DASH FINALIZADO!");
-
+        rb.velocity = Vector2.zero;
         estaDashando = false;
-        animator.speed = 1f;
 
-        if (iaRonda) iaRonda.enabled = true;
-
-        StartCoroutine(CooldownDash());
-    }
-
-    IEnumerator CooldownDash()
-    {
-        yield return new WaitForSeconds(tempoCooldown);
+        yield return new WaitForSeconds(cooldown);
         podeDash = true;
-    }
-
-    void AplicaDano(Collider2D player)
-    {
-        Debug.Log($"💥 DANO {danoDash}!");
-        Saude s = player.GetComponent<Saude>();
-        if (s != null)
-        {
-            s.dano(danoDash);
-            Debug.Log($"❤️ Vida: {s.saude}");
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (estaDashando && other.CompareTag("Player"))
-            AplicaDano(other);
     }
 }

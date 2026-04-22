@@ -1,94 +1,118 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class IAInimigoRonda : MonoBehaviour
 {
-    public GameObject inimigo;
-    public GameObject[] pontos;
+    [Header("Pontos de Ronda")]
+    public Transform[] pontos;
 
-    public float velocidade = 5f;
-    public float espera = 0f;  // ← 0 = sem espera
-
+    [Header("Movimento")]
+    public float velocidade = 4f;
+    public float tempoEspera = 1f;
     public bool loop = true;
-    public bool atacando = false;
-    private Transform transform;
-    int i = 0;
-    float proxTempo;
-    bool seMovendo;
-    Animator animator;
-    Saude saude;
+
+    [Header("Combate")]
+    public float distanciaAtaque = 3f;
+
+    private int indice = 0;
+    private bool podeMover = true;
+
+    private Rigidbody2D rb;
+    private Animator animator;
+    private Saude saude;
+    private DashInimigo dash;
 
     void Start()
     {
-        transform = inimigo.transform;
-        proxTempo = 0f;
-        seMovendo = true;
+        rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        saude = gameObject.GetComponent<Saude>();
+        saude = GetComponent<Saude>();
+        dash = GetComponent<DashInimigo>();
     }
 
     void Update()
     {
-        DashInimigo dash = GetComponent<DashInimigo>();
+        if (saude == null || saude.morto) return;
 
-        if (!saude.morto && !dash.estaDashando)
+        if (dash != null && dash.estaDashando)
         {
-            if (Time.time >= proxTempo)
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
+        Movimentar();
+    }
+
+    void Movimentar()
+    {
+        if (pontos == null || pontos.Length == 0 || !podeMover) return;
+
+        // 🔥 PROTEÇÃO CONTRA ERRO
+        if (indice >= pontos.Length || pontos[indice] == null)
+        {
+            Debug.LogWarning("⚠️ Ponto inválido ou deletado!");
+
+            indice = 0;
+            return;
+        }
+
+        Transform alvo = pontos[indice];
+
+        Vector2 direcao = (alvo.position - transform.position).normalized;
+
+        // só eixo X
+        rb.velocity = new Vector2(direcao.x * velocidade, rb.velocity.y);
+
+        if (animator) animator.SetBool("Correndo", true);
+
+        // virar sprite
+        if (direcao.x != 0)
+        {
+            Vector3 escala = transform.localScale;
+            escala.x = Mathf.Sign(direcao.x) * Mathf.Abs(escala.x);
+            transform.localScale = escala;
+        }
+
+        // chegou no ponto
+        if (Vector2.Distance(transform.position, alvo.position) < 0.2f)
+        {
+            rb.velocity = Vector2.zero;
+
+            if (animator) animator.SetBool("Correndo", false);
+
+            indice++;
+
+            if (indice >= pontos.Length)
             {
-                if (!seMovendo)
+                if (loop) indice = 0;
+                else
                 {
-                    Vector2 escala = transform.localScale;
-                    escala.x = escala.x * -1;
-                    transform.localScale = escala;
-                    seMovendo = true;
+                    podeMover = false;
+                    return;
                 }
             }
-            if (!atacando)
-            {
-                movimenta();
-            }
+
+            StartCoroutine(Esperar());
         }
     }
 
-    void movimenta()
+    IEnumerator Esperar()
     {
-        if ((pontos.Length != 0) && (seMovendo))
-        {
-            transform.position = Vector3.MoveTowards(transform.position, pontos[i].transform.position, velocidade * Time.deltaTime);
-            animator.SetBool("Correndo", true);
-
-            if (Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1)
-            {
-                i++;
-                proxTempo = Time.time + espera;  // ← CORRIGIDO: = ao invés de +=
-                seMovendo = false;
-                animator.SetBool("Correndo", false);
-            }
-
-            if (i >= pontos.Length)
-            {
-                if (loop)
-                    i = 0;
-                else
-                    seMovendo = false;
-            }
-        }
+        podeMover = false;
+        yield return new WaitForSeconds(tempoEspera);
+        podeMover = true;
     }
 
     private void OnTriggerStay2D(Collider2D outro)
     {
-        if (outro.gameObject.tag == "Player")
-        {
-            ataca();
-        }
-    }
+        if (!outro.CompareTag("Player")) return;
 
-    public void ataca()
-    {
-        if (!atacando)
+        float distancia = Vector2.Distance(transform.position, outro.transform.position);
+
+        if (dash != null && dash.podeDash && distancia <= distanciaAtaque)
         {
-            animator.SetTrigger("Ataque");
+            Vector2 direcao = (outro.transform.position - transform.position).normalized;
+            dash.IniciaDash(direcao);
         }
     }
 }
