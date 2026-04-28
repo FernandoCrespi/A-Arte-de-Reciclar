@@ -1,25 +1,22 @@
 fileFormatVersion: 2
-guid: d0b229c4d8432ee468660f0dfb8fd36e
+guid: 4c3b13a7e3c29684ea989c2b53bae4d2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2122652195152443063
-    second: InimigoLixoAtacando_0
+      213: 8990995200351339670
+    second: InimigoLixoAtacando2.0_0
   - first:
-      213: 3153118722059699741
-    second: InimigoLixoAtacando_1
+      213: 4537418921928746039
+    second: InimigoLixoAtacando2.0_1
   - first:
-      213: -4077506990879920972
-    second: InimigoLixoAtacando_2
+      213: 3783150205237899886
+    second: InimigoLixoAtacando2.0_2
   - first:
-      213: 4615107180385425322
-    second: InimigoLixoAtacando_3
+      213: -8219994921914508746
+    second: InimigoLixoAtacando2.0_3
   - first:
-      213: 2391332794679490971
-    second: InimigoLixoAtacando_4
-  - first:
-      213: -2124053026287773876
-    second: InimigoLixoAtacando_5
+      213: 2434087058162595501
+    second: InimigoLixoAtacando2.0_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -111,37 +108,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: InimigoLixoAtacando_0
+      name: InimigoLixoAtacando2.0_0
       rect:
         serializedVersion: 2
         x: 13
@@ -155,20 +126,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9494c362313da82e0800000000000000
-      internalID: -2122652195152443063
+      spriteID: 6940f269f7e66cc70800000000000000
+      internalID: 8990995200351339670
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_1
+      name: InimigoLixoAtacando2.0_1
       rect:
         serializedVersion: 2
         x: 77
         y: 127
         width: 38
-        height: 57
+        height: 58
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -176,20 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d16800395c022cb20800000000000000
-      internalID: 3153118722059699741
+      spriteID: 734e2be187628fe30800000000000000
+      internalID: 4537418921928746039
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_2
+      name: InimigoLixoAtacando2.0_2
       rect:
         serializedVersion: 2
         x: 13
         y: 63
         width: 38
-        height: 54
+        height: 56
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -197,20 +168,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4bc2e6fcef8c967c0800000000000000
-      internalID: -4077506990879920972
+      spriteID: e62b6235113708430800000000000000
+      internalID: 3783150205237899886
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_3
+      name: InimigoLixoAtacando2.0_3
       rect:
         serializedVersion: 2
         x: 77
-        y: 65
+        y: 63
         width: 38
-        height: 49
+        height: 58
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,41 +189,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: aa75a3757872c0040800000000000000
-      internalID: 4615107180385425322
+      spriteID: 63a55cf7b26bced80800000000000000
+      internalID: -8219994921914508746
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InimigoLixoAtacando_4
+      name: InimigoLixoAtacando2.0_4
       rect:
         serializedVersion: 2
-        x: 11
-        y: 1
-        width: 38
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b99fc96c188bf2120800000000000000
-      internalID: 2391332794679490971
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: InimigoLixoAtacando_5
-      rect:
-        serializedVersion: 2
-        x: 75
+        x: 13
         y: 0
-        width: 36
-        height: 50
+        width: 38
+        height: 59
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,8 +210,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c47160cb609d582e0800000000000000
-      internalID: -2124053026287773876
+      spriteID: da63826784d97c120800000000000000
+      internalID: 2434087058162595501
       vertices: []
       indices: 
       edges: []
@@ -276,13 +226,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      InimigoLixoAtacando_0: -2122652195152443063
-      InimigoLixoAtacando_1: 3153118722059699741
-      InimigoLixoAtacando_2: -4077506990879920972
-      InimigoLixoAtacando_3: 4615107180385425322
-      InimigoLixoAtacando_4: 2391332794679490971
-      InimigoLixoAtacando_5: -2124053026287773876
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
