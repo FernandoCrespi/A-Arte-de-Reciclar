@@ -4,20 +4,32 @@ using UnityEngine;
 
 public class IAInimigoRonda : MonoBehaviour
 {
+    [Header("Ronda")]
     public GameObject inimigo;
     public GameObject[] pontos;
-
     public float velocidade = 5f;
-    public float espera = 0f;  // ← 0 = sem espera
-
+    public float espera = 0f;
     public bool loop = true;
-    public bool atacando = false;
-    private Transform transform;
-    int i = 0;
-    float proxTempo;
-    bool seMovendo;
-    Animator animator;
-    Saude saude;
+
+    [Header("Vulcão")]
+    public GameObject projetilPrefab;
+    public float alcanceDeteccao = 5f;  // distância para detectar o jogador
+    public float intervaloMinAtaque = 2f;  // intervalo mínimo entre explosões
+    public float intervaloMaxAtaque = 3f;  // intervalo máximo entre explosões
+    public float forcaParaCima = 10f;
+    public float espalhamento = 3f;
+    public int quantidadePorAtaque = 3;
+
+    private new Transform transform;
+    private int i = 0;
+    private float proxTempo;
+    private bool seMovendo;
+    private bool jogadorPerto = false;
+    private float timerAtaque = 0f;
+    private float intervaloAtual;
+    private Animator animator;
+    private Saude saude;
+    private Transform jogadorTransform;
 
     void Start()
     {
@@ -25,70 +37,98 @@ public class IAInimigoRonda : MonoBehaviour
         proxTempo = 0f;
         seMovendo = true;
         animator = GetComponent<Animator>();
-        saude = gameObject.GetComponent<Saude>();
+        saude = GetComponent<Saude>();
+        jogadorTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        intervaloAtual = ProximoIntervalo();
     }
 
     void Update()
     {
-        DashInimigo dash = GetComponent<DashInimigo>();
+        if (saude.morto) return;
 
-        if (!saude.morto && !dash.estaDashando)
+        // verifica distância do jogador
+        float dist = Vector2.Distance(transform.position, jogadorTransform.position);
+        jogadorPerto = dist <= alcanceDeteccao;
+
+        if (jogadorPerto)
         {
-            if (Time.time >= proxTempo)
+            // para de andar e conta o timer de ataque
+            animator.SetBool("Correndo", false);
+            timerAtaque += Time.deltaTime;
+
+            if (timerAtaque >= intervaloAtual)
             {
-                if (!seMovendo)
-                {
-                    Vector2 escala = transform.localScale;
-                    escala.x = escala.x * -1;
-                    transform.localScale = escala;
-                    seMovendo = true;
-                }
+                timerAtaque = 0f;
+                intervaloAtual = ProximoIntervalo(); // próximo intervalo aleatório
+                Explodir();
             }
-            if (!atacando)
+        }
+        else
+        {
+            // jogador longe: faz ronda normalmente
+            timerAtaque = 0f;
+
+            if (Time.time >= proxTempo && !seMovendo)
             {
-                movimenta();
+                Vector2 escala = transform.localScale;
+                escala.x *= -1;
+                transform.localScale = escala;
+                seMovendo = true;
             }
+            movimenta();
         }
     }
 
     void movimenta()
     {
-        if ((pontos.Length != 0) && (seMovendo))
-        {
-            transform.position = Vector3.MoveTowards(transform.position, pontos[i].transform.position, velocidade * Time.deltaTime);
-            animator.SetBool("Correndo", true);
+        if (pontos.Length == 0 || !seMovendo) return;
 
-            if (Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1)
-            {
-                i++;
-                proxTempo = Time.time + espera;  // ← CORRIGIDO: = ao invés de +=
-                seMovendo = false;
-                animator.SetBool("Correndo", false);
-            }
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            pontos[i].transform.position,
+            velocidade * Time.deltaTime
+        );
+        animator.SetBool("Correndo", true);
+
+        if (Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1f)
+        {
+            i++;
+            proxTempo = Time.time + espera;
+            seMovendo = false;
+            animator.SetBool("Correndo", false);
 
             if (i >= pontos.Length)
-            {
-                if (loop)
-                    i = 0;
-                else
-                    seMovendo = false;
-            }
+                i = loop ? 0 : i - 1;
         }
     }
 
-    private void OnTriggerStay2D(Collider2D outro)
+    void Explodir()
     {
-        if (outro.gameObject.tag == "Player")
+        for (int j = 0; j < quantidadePorAtaque; j++)
         {
-            ataca();
+            GameObject p = Instantiate(
+                projetilPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            float vx = Random.Range(-espalhamento, espalhamento);
+            p.GetComponent<Rigidbody2D>()
+             .AddForce(new Vector2(vx, forcaParaCima), ForceMode2D.Impulse);
         }
+
+        animator.SetTrigger("Ataque"); // toque a animação se tiver
     }
 
-    public void ataca()
+    float ProximoIntervalo()
     {
-        if (!atacando)
-        {
-            animator.SetTrigger("Ataque");
-        }
+        return Random.Range(intervaloMinAtaque, intervaloMaxAtaque);
+    }
+
+    // desenha o alcance de detecção no editor (visual apenas)
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, alcanceDeteccao);
     }
 }
