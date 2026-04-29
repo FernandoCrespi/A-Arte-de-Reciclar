@@ -53,9 +53,9 @@ public class GameManager : MonoBehaviour
         Debug.Log("Abrindo Ajustes...");
 
         // Fecha o pause primeiro
-        isPaused = false;
+        isPaused = true;
         pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
+        Time.timeScale = 0f;
 
         // Abre os ajustes
         isSettingsOpen = true;

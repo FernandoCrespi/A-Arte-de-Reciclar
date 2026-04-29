@@ -1997,7 +1997,6 @@ GameObject:
   - component: {fileID: 849308003}
   - component: {fileID: 849308002}
   - component: {fileID: 849308000}
-  - component: {fileID: 849308005}
   - component: {fileID: 849308006}
   m_Layer: 6
   m_Name: Inimigo
@@ -2196,24 +2195,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &849308005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 849307995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5995ae73f522cc14e93dc3c097402e1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocidadeDash: 18
-  tempoDash: 0.5
-  tempoCooldown: 3
-  danoDash: 30
-  estaDashando: 0
-  podeDash: 1
 --- !u!114 &849308006
 MonoBehaviour:
   m_ObjectHideFlags: 0
