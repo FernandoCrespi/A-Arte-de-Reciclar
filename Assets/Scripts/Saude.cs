@@ -85,6 +85,8 @@ public class Saude : MonoBehaviour
     IEnumerator morre()
     {
         yield return new WaitForSeconds(2.0f);
+        Coletor coletor = GetComponent<Coletor>();
+        if (coletor != null) coletor.Resetar();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
