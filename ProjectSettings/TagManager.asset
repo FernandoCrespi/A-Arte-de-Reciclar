@@ -51,6 +51,9 @@ TagManager:
   - name: decorativo
     uniqueID: 689923117
     locked: 0
+  - name: coletavel
+    uniqueID: 2491021185
+    locked: 0
   - name: Personagens
     uniqueID: 3868492799
     locked: 0
