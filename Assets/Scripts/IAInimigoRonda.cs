@@ -6,18 +6,18 @@ public class IAInimigoRonda : MonoBehaviour
 {
     public GameObject inimigo;
     public GameObject[] pontos;
-
     public float velocidade = 5f;
-    public float espera = 0f;  // ← 0 = sem espera
-
+    public float espera = 0f;
     public bool loop = true;
     public bool atacando = false;
-    private Transform transform;
-    int i = 0;
-    float proxTempo;
-    bool seMovendo;
-    Animator animator;
-    Saude saude;
+
+    private new Transform transform;
+    private int i = 0;
+    private float proxTempo;
+    private bool seMovendo;
+    private Animator animator;
+    private Saude saude;
+    private DashInimigo dash;
 
     void Start()
     {
@@ -26,13 +26,16 @@ public class IAInimigoRonda : MonoBehaviour
         seMovendo = true;
         animator = GetComponent<Animator>();
         saude = gameObject.GetComponent<Saude>();
+        dash = GetComponent<DashInimigo>();
     }
 
     void Update()
     {
-        DashInimigo dash = GetComponent<DashInimigo>();
+        if (saude == null) return;
 
-        if (!saude.morto && !dash.estaDashando)
+        bool dashando = dash != null && dash.estaDashando;
+
+        if (!saude.morto && !dashando)
         {
             if (Time.time >= proxTempo)
             {
@@ -44,6 +47,7 @@ public class IAInimigoRonda : MonoBehaviour
                     seMovendo = true;
                 }
             }
+
             if (!atacando)
             {
                 movimenta();
@@ -58,10 +62,10 @@ public class IAInimigoRonda : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, pontos[i].transform.position, velocidade * Time.deltaTime);
             animator.SetBool("Correndo", true);
 
-            if (Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1)
+            if (Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1f)
             {
                 i++;
-                proxTempo = Time.time + espera;  // ← CORRIGIDO: = ao invés de +=
+                proxTempo = Time.time + espera;
                 seMovendo = false;
                 animator.SetBool("Correndo", false);
             }
