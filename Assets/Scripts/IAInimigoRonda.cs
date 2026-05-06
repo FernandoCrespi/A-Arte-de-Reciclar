@@ -13,18 +13,16 @@ public class IAInimigoRonda : MonoBehaviour
 
     [Header("Vulcão")]
     public GameObject projetilPrefab;
-    public float alcanceDeteccao = 5f;  // distância para detectar o jogador
-    public float intervaloMinAtaque = 2f;  // intervalo mínimo entre explosões
-    public float intervaloMaxAtaque = 3f;  // intervalo máximo entre explosões
+    public float alcanceDeteccao = 5f;
+    public float intervaloMinAtaque = 2f;
+    public float intervaloMaxAtaque = 3f;
     public float forcaParaCima = 10f;
     public float espalhamento = 3f;
     public int quantidadePorAtaque = 3;
 
-    private new Transform transform;
     private int i = 0;
     private float proxTempo;
     private bool seMovendo;
-    private bool jogadorPerto = false;
     private float timerAtaque = 0f;
     private float intervaloAtual;
     private Animator animator;
@@ -33,39 +31,40 @@ public class IAInimigoRonda : MonoBehaviour
 
     void Start()
     {
-        transform = inimigo.transform;
         proxTempo = 0f;
         seMovendo = true;
         animator = GetComponent<Animator>();
         saude = GetComponent<Saude>();
-        jogadorTransform = GameObject.FindGameObjectWithTag("Player").transform;
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+            jogadorTransform = player.transform;
+
         intervaloAtual = ProximoIntervalo();
     }
 
     void Update()
     {
-        if (saude.morto) return;
+        if (saude != null && saude.morto) return;
+        if (jogadorTransform == null) return;
 
-        // verifica distância do jogador
         float dist = Vector2.Distance(transform.position, jogadorTransform.position);
-        jogadorPerto = dist <= alcanceDeteccao;
+        bool jogadorPerto = dist <= alcanceDeteccao;
 
         if (jogadorPerto)
         {
-            // para de andar e conta o timer de ataque
             animator.SetBool("Correndo", false);
             timerAtaque += Time.deltaTime;
 
             if (timerAtaque >= intervaloAtual)
             {
                 timerAtaque = 0f;
-                intervaloAtual = ProximoIntervalo(); // próximo intervalo aleatório
+                intervaloAtual = ProximoIntervalo();
                 Explodir();
             }
         }
         else
         {
-            // jogador longe: faz ronda normalmente
             timerAtaque = 0f;
 
             if (Time.time >= proxTempo && !seMovendo)
@@ -75,11 +74,12 @@ public class IAInimigoRonda : MonoBehaviour
                 transform.localScale = escala;
                 seMovendo = true;
             }
-            movimenta();
+
+            Movimenta();
         }
     }
 
-    void movimenta()
+    void Movimenta()
     {
         if (pontos.Length == 0 || !seMovendo) return;
 
@@ -88,6 +88,7 @@ public class IAInimigoRonda : MonoBehaviour
             pontos[i].transform.position,
             velocidade * Time.deltaTime
         );
+
         animator.SetBool("Correndo", true);
 
         if (Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1f)
@@ -104,6 +105,8 @@ public class IAInimigoRonda : MonoBehaviour
 
     void Explodir()
     {
+        if (projetilPrefab == null) return;
+
         for (int j = 0; j < quantidadePorAtaque; j++)
         {
             GameObject p = Instantiate(
@@ -112,12 +115,20 @@ public class IAInimigoRonda : MonoBehaviour
                 Quaternion.identity
             );
 
-            float vx = Random.Range(-espalhamento, espalhamento);
-            p.GetComponent<Rigidbody2D>()
-             .AddForce(new Vector2(vx, forcaParaCima), ForceMode2D.Impulse);
+            ProjetilDano projetil = p.GetComponent<ProjetilDano>();
+            if (projetil != null)
+                projetil.SetDono(gameObject);
+
+            Rigidbody2D rb = p.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                float vx = Random.Range(-espalhamento, espalhamento);
+                rb.AddForce(new Vector2(vx, forcaParaCima), ForceMode2D.Impulse);
+            }
         }
 
-        animator.SetTrigger("Ataque"); // toque a animação se tiver
+        if (animator != null)
+            animator.SetTrigger("Ataque");
     }
 
     float ProximoIntervalo()
@@ -125,10 +136,10 @@ public class IAInimigoRonda : MonoBehaviour
         return Random.Range(intervaloMinAtaque, intervaloMaxAtaque);
     }
 
-    // desenha o alcance de detecção no editor (visual apenas)
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, alcanceDeteccao);
+        if (transform != null)
+            Gizmos.DrawWireSphere(transform.position, alcanceDeteccao);
     }
 }

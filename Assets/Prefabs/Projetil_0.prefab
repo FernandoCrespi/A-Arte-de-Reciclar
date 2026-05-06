@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4942769569359927446}
   - component: {fileID: 6344955037301831837}
   - component: {fileID: 5718378253646620780}
+  - component: {fileID: -5762756608866306193}
   m_Layer: 0
   m_Name: Projetil_0
   m_TagString: Untagged
@@ -151,3 +152,17 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.0016009808}
   m_Radius: 0.07559061
+--- !u!114 &-5762756608866306193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823645533275285968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e41c6af7b31820438eb16481ece424a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dano: 10
+  tempoDeVida: 5

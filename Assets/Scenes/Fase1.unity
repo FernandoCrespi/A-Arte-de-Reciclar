@@ -1997,7 +1997,6 @@ GameObject:
   - component: {fileID: 849308003}
   - component: {fileID: 849308002}
   - component: {fileID: 849308000}
-  - component: {fileID: 849308005}
   - component: {fileID: 849308006}
   m_Layer: 6
   m_Name: Inimigo
@@ -2147,8 +2146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf88443c7713cc43bf705140a229e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  morto: 1
-  saude: 4
+  morto: 0
+  saude: 100
 --- !u!114 &849308002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2168,7 +2167,13 @@ MonoBehaviour:
   velocidade: 5
   espera: 1
   loop: 1
-  atacando: 0
+  projetilPrefab: {fileID: 1823645533275285968, guid: 19d59e91cc4027e4197ecea2c2ae91a0, type: 3}
+  alcanceDeteccao: 5
+  intervaloMinAtaque: 2
+  intervaloMaxAtaque: 3
+  forcaParaCima: 10
+  espalhamento: 3
+  quantidadePorAtaque: 3
 --- !u!50 &849308003
 Rigidbody2D:
   serializedVersion: 4
@@ -2196,24 +2201,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &849308005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 849307995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5995ae73f522cc14e93dc3c097402e1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocidadeDash: 18
-  tempoDash: 0.5
-  tempoCooldown: 3
-  danoDash: 30
-  estaDashando: 0
-  podeDash: 1
 --- !u!114 &849308006
 MonoBehaviour:
   m_ObjectHideFlags: 0

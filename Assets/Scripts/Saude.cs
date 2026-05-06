@@ -15,52 +15,33 @@ public class Saude : MonoBehaviour
         animator = gameObject.GetComponent<Animator>();
     }
 
-    void Update()
-    {
-    }
-
     public void dano(int x)
     {
+        if (morto) return; // Proteção contra dano duplo
+
         saude -= x;
         if (saude <= 0)
         {
-            morto = true;
-            animator.SetTrigger("Morte");
-            GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
-
-            // === DESABILITA MOVIMENTO ===
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            if (rb)
-            {
-                rb.velocity = Vector2.zero;
-                rb.simulated = false;
-            }
-
-            MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts)
-            {
-                if (script != this && script != animator)
-                {
-                    script.enabled = false;
-                }
-            }
-
-            if (gameObject.tag == "Player")
-            {
-                StartCoroutine(morre());
-            }
+            Morrer();
         }
     }
 
     public void danoMax()
     {
+        if (morto) return;
+
         saude = 0;
+        Morrer();
+    }
+
+    void Morrer()
+    {
         morto = true;
         animator.SetTrigger("Morte");
+        GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
 
-        // === DESABILITA MOVIMENTO ===
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb)
+        if (rb != null)
         {
             rb.velocity = Vector2.zero;
             rb.simulated = false;
@@ -69,12 +50,12 @@ public class Saude : MonoBehaviour
         MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts)
         {
-            if (script != this && script != animator && script.GetType() != typeof(DestrutorPorTempo))
+            // Cast correto: Animator não é MonoBehaviour
+            if (script != this && script.GetType() != typeof(DestrutorPorTempo))
             {
                 script.enabled = false;
             }
         }
-
 
         if (gameObject.tag == "Player")
         {
