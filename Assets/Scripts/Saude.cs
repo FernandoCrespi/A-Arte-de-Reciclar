@@ -1,45 +1,52 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Saude : MonoBehaviour
 {
-    public bool morto;
-    public int saude = 100;
+    [Header("Configurações")]
+    public int saudeMaxima = 100;
+    public int saudeAtual;
+    public bool morto { get; private set; }
+
     private Animator animator;
 
     void Start()
     {
         morto = false;
-        animator = gameObject.GetComponent<Animator>();
+        saudeAtual = saudeMaxima;
+        animator = GetComponent<Animator>();
     }
 
-    public void dano(int x)
-    {
-        if (morto) return; // Proteção contra dano duplo
-
-        saude -= x;
-        if (saude <= 0)
-        {
-            Morrer();
-        }
-    }
-
-    public void danoMax()
+    // Recebe dano normal
+    public void dano(int quantidade)
     {
         if (morto) return;
 
-        saude = 0;
+        saudeAtual -= quantidade;
+        saudeAtual = Mathf.Max(saudeAtual, 0); // Nunca vai abaixo de 0
+
+        if (saudeAtual <= 0)
+            Morrer();
+    }
+
+    // Mata instantaneamente
+    public void danoMax()
+    {
+        if (morto) return;
+        saudeAtual = 0;
         Morrer();
     }
 
     void Morrer()
     {
         morto = true;
-        animator.SetTrigger("Morte");
-        GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
 
+        // Toca animação de morte
+        if (animator != null)
+            animator.SetTrigger("Morte");
+
+        // Para o Rigidbody
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -47,27 +54,29 @@ public class Saude : MonoBehaviour
             rb.simulated = false;
         }
 
+        // Desativa todos os scripts exceto este e o DestrutorPorTempo
         MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts)
         {
-            // Cast correto: Animator não é MonoBehaviour
-            if (script != this && script.GetType() != typeof(DestrutorPorTempo))
-            {
+            if (script != this && !(script is DestrutorPorTempo))
                 script.enabled = false;
-            }
         }
 
-        if (gameObject.tag == "Player")
-        {
-            StartCoroutine(morre());
-        }
+        // Inicia o destrutor se existir
+        GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
+
+        // Se for o player, reinicia a cena
+        if (gameObject.CompareTag("Player"))
+            StartCoroutine(ReiniciarCena());
     }
 
-    IEnumerator morre()
+    IEnumerator ReiniciarCena()
     {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(2f);
+
         Coletor coletor = GetComponent<Coletor>();
         if (coletor != null) coletor.Resetar();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -1,134 +1,177 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class IAInimigoRonda : MonoBehaviour
 {
-    [Header("Ronda")]
-    public GameObject inimigo;
-    public GameObject[] pontos;
-    public float velocidade = 5f;
-    public float espera = 0f;
+    [Header("Patrulha")]
+    public Transform[] pontos;
+    public float velocidade = 3f;
+    public float esperaEntreWaypoints = 1f;
     public bool loop = true;
 
-    [Header("Vulcão")]
+    [Header("Ataque Vulcão")]
     public GameObject projetilPrefab;
-    public float alcanceDeteccao = 5f;
+    public float alcanceDeteccao = 6f;
     public float intervaloMinAtaque = 2f;
-    public float intervaloMaxAtaque = 3f;
-    public float forcaParaCima = 10f;
-    public float espalhamento = 3f;
-    public int quantidadePorAtaque = 3;
+    public float intervaloMaxAtaque = 4f;
+    public float forcaParaCima = 12f;
+    public float espalhamento = 4f;
+    public int quantidadePorAtaque = 5;
 
-    private int i = 0;
-    private float proxTempo;
-    private bool seMovendo;
+    // Referências privadas
+    private int indiceAtual = 0;
+    private bool aguardando = false;
     private float timerAtaque = 0f;
     private float intervaloAtual;
+    private Transform jogadorTransform;
     private Animator animator;
     private Saude saude;
-    private Transform jogadorTransform;
 
     void Start()
     {
-        proxTempo = 0f;
-        seMovendo = true;
         animator = GetComponent<Animator>();
         saude = GetComponent<Saude>();
 
+        // Busca o player pela tag
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
             jogadorTransform = player.transform;
+        else
+            Debug.LogWarning("[IAInimigoRonda] Player não encontrado! Verifique a tag 'Player'.");
 
         intervaloAtual = ProximoIntervalo();
     }
 
     void Update()
     {
+        // Para tudo se estiver morto
         if (saude != null && saude.morto) return;
-        if (jogadorTransform == null) return;
 
-        float dist = Vector2.Distance(transform.position, jogadorTransform.position);
-        bool jogadorPerto = dist <= alcanceDeteccao;
-
-        if (jogadorPerto)
+        // Sem player, só patrulha
+        if (jogadorTransform == null)
         {
-            animator.SetBool("Correndo", false);
-            timerAtaque += Time.deltaTime;
+            Patrulhar();
+            return;
+        }
 
+        float distancia = Vector2.Distance(transform.position, jogadorTransform.position);
+
+        if (distancia <= alcanceDeteccao)
+        {
+            // Player detectado → para e ataca
+            animator.SetBool("Correndo", false);
+
+            timerAtaque += Time.deltaTime;
             if (timerAtaque >= intervaloAtual)
             {
                 timerAtaque = 0f;
                 intervaloAtual = ProximoIntervalo();
-                Explodir();
+                AtaqueVulcao();
             }
         }
         else
         {
+            // Player longe → patrulha normalmente
             timerAtaque = 0f;
-
-            if (Time.time >= proxTempo && !seMovendo)
-            {
-                Vector2 escala = transform.localScale;
-                escala.x *= -1;
-                transform.localScale = escala;
-                seMovendo = true;
-            }
-
-            Movimenta();
+            Patrulhar();
         }
     }
 
-    void Movimenta()
+    // ──────────────────────────────────────────
+    // PATRULHA
+    // ──────────────────────────────────────────
+    void Patrulhar()
     {
-        if (pontos.Length == 0 || !seMovendo) return;
+        if (pontos.Length == 0 || aguardando) return;
 
+        Transform alvo = pontos[indiceAtual];
+
+        // Vira para o lado correto
+        VirarParaAlvo(alvo.position);
+
+        // Move em direção ao waypoint
         transform.position = Vector3.MoveTowards(
             transform.position,
-            pontos[i].transform.position,
+            alvo.position,
             velocidade * Time.deltaTime
         );
 
         animator.SetBool("Correndo", true);
 
-        if (Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1f)
+        // Chegou no waypoint
+        if (Vector3.Distance(transform.position, alvo.position) <= 0.05f)
         {
-            i++;
-            proxTempo = Time.time + espera;
-            seMovendo = false;
             animator.SetBool("Correndo", false);
-
-            if (i >= pontos.Length)
-                i = loop ? 0 : i - 1;
+            StartCoroutine(AguardarWaypoint());
         }
     }
 
-    void Explodir()
+    IEnumerator AguardarWaypoint()
     {
-        if (projetilPrefab == null) return;
+        aguardando = true;
+        yield return new WaitForSeconds(esperaEntreWaypoints);
 
-        for (int j = 0; j < quantidadePorAtaque; j++)
+        indiceAtual++;
+        if (indiceAtual >= pontos.Length)
+            indiceAtual = loop ? 0 : pontos.Length - 1;
+
+        aguardando = false;
+    }
+
+    void VirarParaAlvo(Vector3 alvoPos)
+    {
+        Vector3 escala = transform.localScale;
+        if (alvoPos.x < transform.position.x)
+            escala.x = -Mathf.Abs(escala.x);
+        else
+            escala.x = Mathf.Abs(escala.x);
+        transform.localScale = escala;
+    }
+
+    // ──────────────────────────────────────────
+    // ATAQUE VULCÃO
+    // ──────────────────────────────────────────
+    void AtaqueVulcao()
+    {
+        if (projetilPrefab == null)
         {
-            GameObject p = Instantiate(
-                projetilPrefab,
-                transform.position,
-                Quaternion.identity
-            );
-
-            ProjetilDano projetil = p.GetComponent<ProjetilDano>();
-            if (projetil != null)
-                projetil.SetDono(gameObject);
-
-            Rigidbody2D rb = p.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                float vx = Random.Range(-espalhamento, espalhamento);
-                rb.AddForce(new Vector2(vx, forcaParaCima), ForceMode2D.Impulse);
-            }
+            Debug.LogWarning("[IAInimigoRonda] ProjetilPrefab não atribuído no Inspector!");
+            return;
         }
 
+        // Dispara animação de ataque
         if (animator != null)
             animator.SetTrigger("Ataque");
+
+        // Lança os projéteis em arco de vulcão
+        for (int j = 0; j < quantidadePorAtaque; j++)
+        {
+            GameObject proj = Instantiate(projetilPrefab, transform.position, Quaternion.identity);
+
+            // Define o dono para não se machucar
+            ProjetilDano projetilDano = proj.GetComponent<ProjetilDano>();
+            if (projetilDano != null)
+                projetilDano.SetDono(gameObject);
+
+            // Aplica física de vulcão
+            Rigidbody2D rb = proj.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                // Distribui os projéteis em leque no eixo X
+                float t = quantidadePorAtaque > 1
+                    ? (float)j / (quantidadePorAtaque - 1)
+                    : 0.5f;
+
+                float vx = Mathf.Lerp(-espalhamento, espalhamento, t);
+                float vy = forcaParaCima;
+
+                rb.AddForce(new Vector2(vx, vy), ForceMode2D.Impulse);
+            }
+            else
+            {
+                Debug.LogWarning("[IAInimigoRonda] Projétil sem Rigidbody2D! Adicione um Rigidbody2D ao prefab.");
+            }
+        }
     }
 
     float ProximoIntervalo()
@@ -136,10 +179,10 @@ public class IAInimigoRonda : MonoBehaviour
         return Random.Range(intervaloMinAtaque, intervaloMaxAtaque);
     }
 
+    // Mostra o alcance de detecção no editor
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        if (transform != null)
-            Gizmos.DrawWireSphere(transform.position, alcanceDeteccao);
+        Gizmos.DrawWireSphere(transform.position, alcanceDeteccao);
     }
 }
