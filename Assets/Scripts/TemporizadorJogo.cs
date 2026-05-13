@@ -1,48 +1,50 @@
 using UnityEngine;
+using TMPro;
 
 public class TemporizadorJogo : MonoBehaviour
 {
-    public static TemporizadorJogo Instancia { get; private set; }
+    public static TemporizadorJogo Instancia;
+    public TMP_Text textoCronometro;
 
-    private float tempoDecorrido = 0f;
-    private bool estaContando = false;
+    private float tempo = 0f;
+    private bool contando = true;
 
     void Awake()
     {
         if (Instancia == null)
         {
             Instancia = this;
-            DontDestroyOnLoad(gameObject); 
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); 
+            Destroy(gameObject);
         }
     }
 
     void Update()
     {
-        if (estaContando)
-        {
-            tempoDecorrido += Time.deltaTime;
-        }
+        if (!contando) return;
+
+        tempo += Time.deltaTime;
+        AtualizarUI();
     }
 
-    public void IniciarCronometro()
+    void AtualizarUI()
     {
-        tempoDecorrido = 0f;
-        estaContando = true;
+        int minutos = (int)(tempo / 60);
+        int segundos = (int)(tempo % 60);
+        textoCronometro.text = string.Format("{0:00}:{1:00}", minutos, segundos);
     }
 
-    public void PararCronometro()
+    public void PararTemporizador()
     {
-        estaContando = false;
+        contando = false;
+        AtualizarUI();
     }
 
-    public string ObterTempoFormatado()
+    public float PegarTempo()
     {
-        int minutos = Mathf.FloorToInt(tempoDecorrido / 60f);
-        int segundos = Mathf.FloorToInt(tempoDecorrido % 60f);
-        return string.Format("{0:00}:{1:00}", minutos, segundos);
+        return tempo;
     }
 }
