@@ -9,10 +9,18 @@ public class Saude : MonoBehaviour
     public int saude = 100;
     private Animator animator;
 
+    [Header("Audio")]
+    public AudioClip somMorte;
+    public float volumeMorte = 1f;
+    private AudioSource audioSource;
+
     void Start()
     {
         morto = false;
         animator = gameObject.GetComponent<Animator>();
+        audioSource = gameObject.GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     void Update()
@@ -26,29 +34,23 @@ public class Saude : MonoBehaviour
         {
             morto = true;
             animator.SetTrigger("Morte");
+            TocarSomMorte();
             GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
 
-            // === DESABILITA MOVIMENTO ===
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             if (rb)
             {
                 rb.velocity = Vector2.zero;
                 rb.simulated = false;
             }
-
             MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour script in scripts)
             {
                 if (script != this && script != animator)
-                {
                     script.enabled = false;
-                }
             }
-
             if (gameObject.tag == "Player")
-            {
                 StartCoroutine(morre());
-            }
         }
     }
 
@@ -57,29 +59,28 @@ public class Saude : MonoBehaviour
         saude = 0;
         morto = true;
         animator.SetTrigger("Morte");
+        TocarSomMorte();
 
-        // === DESABILITA MOVIMENTO ===
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb)
         {
             rb.velocity = Vector2.zero;
             rb.simulated = false;
         }
-
         MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts)
         {
             if (script != this && script != animator && script.GetType() != typeof(DestrutorPorTempo))
-            {
                 script.enabled = false;
-            }
         }
-
-
         if (gameObject.tag == "Player")
-        {
             StartCoroutine(morre());
-        }
+    }
+
+    void TocarSomMorte()
+    {
+        if (somMorte != null && audioSource != null)
+            audioSource.PlayOneShot(somMorte, volumeMorte);
     }
 
     IEnumerator morre()
