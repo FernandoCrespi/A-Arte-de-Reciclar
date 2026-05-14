@@ -8,19 +8,22 @@ public class Controle : MonoBehaviour
     public int forcaDoPulo = 1250;
     public Transform terra;
     public LayerMask chao;
-
     public KeyCode teclaDireita = KeyCode.D;
     public KeyCode teclaEsquerda = KeyCode.A;
     public KeyCode teclaPulo = KeyCode.Space;
+    public KeyCode teclaAtaque = KeyCode.J;
+
+    // Inputs mobile (setados pelo ControleUI)
+    [HideInInspector] public bool btnDireita = false;
+    [HideInInspector] public bool btnEsquerda = false;
+    [HideInInspector] public bool btnPulo = false;
+    [HideInInspector] public bool btnAtaque = false;
 
     private float moveX;
     private bool direita = true;
     private bool noChao;
     private Animator animator;
     private Rigidbody2D rb;
-
-    [Header("Ataque")]
-    public KeyCode teclaAtaque = KeyCode.J; // Tecla que dispara a animação de ataque
 
     void Start()
     {
@@ -31,7 +34,7 @@ public class Controle : MonoBehaviour
     void Update()
     {
         moveJogador();
-        Atacar(); // Verifica se deve disparar animação de ataque
+        Atacar();
     }
 
     private void LateUpdate()
@@ -43,18 +46,22 @@ public class Controle : MonoBehaviour
     {
         moveX = 0;
 
-        if (Input.GetKey(teclaDireita))
+        // Teclado OU botão mobile
+        if (Input.GetKey(teclaDireita) || btnDireita)
             moveX = 1;
-
-        if (Input.GetKey(teclaEsquerda))
+        if (Input.GetKey(teclaEsquerda) || btnEsquerda)
             moveX = -1;
 
         noChao = Physics2D.Linecast(transform.position, terra.position, chao);
 
-        if (Input.GetKeyDown(teclaPulo) && noChao)
+        // Pulo: teclado OU botão mobile
+        if ((Input.GetKeyDown(teclaPulo) || btnPulo) && noChao)
         {
             pula();
         }
+
+        // Reseta o pulo mobile após um frame
+        btnPulo = false;
 
         rb.velocity = new Vector2(moveX * velocidade, rb.velocity.y);
 
@@ -81,7 +88,6 @@ public class Controle : MonoBehaviour
             direita = false;
 
         Vector2 escala = transform.localScale;
-
         if ((escala.x > 0 && !direita) || (escala.x < 0 && direita))
         {
             escala.x *= -1;
@@ -89,13 +95,14 @@ public class Controle : MonoBehaviour
         }
     }
 
-    // ================= Ataque =================
     void Atacar()
     {
-        if (Input.GetKeyDown(teclaAtaque))
+        if (Input.GetKeyDown(teclaAtaque) || btnAtaque)
         {
-            // Apenas dispara a animação de ataque
             animator.SetTrigger("Ataque");
         }
+
+        // Reseta o ataque mobile após um frame
+        btnAtaque = false;
     }
 }
