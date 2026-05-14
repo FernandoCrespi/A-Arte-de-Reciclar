@@ -12,6 +12,7 @@ public class Saude : MonoBehaviour
     [Header("Audio")]
     public AudioClip somMorte;
     public float volumeMorte = 1f;
+    public float iniciarEm = 0f;
     private AudioSource audioSource;
 
     void Start()
@@ -80,7 +81,11 @@ public class Saude : MonoBehaviour
     void TocarSomMorte()
     {
         if (somMorte != null && audioSource != null)
-            audioSource.PlayOneShot(somMorte, volumeMorte);
+        {
+            audioSource.clip = somMorte;
+            audioSource.time = iniciarEm;
+            audioSource.Play();
+        }
     }
 
     IEnumerator morre()
