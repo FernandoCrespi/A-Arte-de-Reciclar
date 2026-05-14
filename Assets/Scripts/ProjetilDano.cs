@@ -11,16 +11,8 @@ public class ProjetilDano : MonoBehaviour
     private Vector2 direcaoDefinida;
     private bool temDirecao = false;
 
-    public void SetDono(GameObject d)
-    {
-        dono = d;
-    }
-
-    public void SetVelocidade(float v)
-    {
-        velocidade = v;
-    }
-
+    public void SetDono(GameObject d) { dono = d; }
+    public void SetVelocidade(float v) { velocidade = v; }
     public void SetDirecao(Vector2 direcao)
     {
         direcaoDefinida = direcao.normalized;
@@ -31,7 +23,7 @@ public class ProjetilDano : MonoBehaviour
     {
         Destroy(gameObject, tempoDeVida);
 
-        // ? IGNORA COLISÃO COM O INIMIGO QUE SPAWNOU
+        // Ignora colisão com o inimigo dono
         if (dono != null)
         {
             Collider2D donoCollider = dono.GetComponent<Collider2D>();
@@ -41,25 +33,22 @@ public class ProjetilDano : MonoBehaviour
         }
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb == null) { Debug.LogError("SEM RIGIDBODY!"); return; }
+        if (rb == null) { Debug.LogError("Projétil sem Rigidbody2D!"); return; }
 
-        if (temDirecao)
-        {
-            rb.velocity = direcaoDefinida * velocidade;
-            rb.gravityScale = 2f;
-        }
-        else
-        {
-            rb.velocity = new Vector2(0, 10f);
-            rb.gravityScale = 2f;
-        }
+        // Define a velocidade via Rigidbody
+        Vector2 vel = temDirecao ? direcaoDefinida * velocidade : new Vector2(0, 10f);
+        rb.velocity = vel;
+        rb.gravityScale = 1.5f; // arco bonito
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
+        // Ignora o próprio dono
         if (dono != null && col.gameObject == dono) return;
+        // Ignora outros inimigos
         if (col.gameObject.CompareTag("Inimigo")) return;
 
+        // Causa dano no Player
         if (col.gameObject.CompareTag("Player"))
         {
             Saude saude = col.gameObject.GetComponent<Saude>();

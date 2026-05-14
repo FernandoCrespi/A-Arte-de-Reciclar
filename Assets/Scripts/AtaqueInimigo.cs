@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class AtaqueInimigo : MonoBehaviour
 {
-    public float cooldown = 2.5f;
-    private float timer = 0f;
+    // Este script gerencia apenas a detecção de proximidade.
+    // O ataque (vulcão) é controlado pelo IAInimigoRonda.
+    // NÃO desativa o IAInimigoRonda para não cancelar o ataque.
+
     private IAInimigoRonda iaRonda;
 
     void Start()
@@ -13,23 +15,14 @@ public class AtaqueInimigo : MonoBehaviour
             iaRonda = GetComponent<IAInimigoRonda>();
     }
 
-    void Update()
-    {
-        if (timer > 0f)
-            timer -= Time.deltaTime;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Player")) return;
-        if (iaRonda != null)
-            iaRonda.enabled = false;
+        // Não interfere com o IAInimigoRonda
+        // Adicione aqui outros comportamentos de proximidade se necessário
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Player")) return;
-        if (iaRonda != null)
-            iaRonda.enabled = true;
+        // Não interfere com o IAInimigoRonda
     }
 }

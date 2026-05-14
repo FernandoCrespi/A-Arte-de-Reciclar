@@ -110,24 +110,20 @@ public class IAInimigoRonda : MonoBehaviour
 
     void AtaqueVulcao()
     {
-        if (projetilPrefab == null)
-        {
-            Debug.LogError("PREFAB NULO!");
-            return;
-        }
+        if (projetilPrefab == null) { Debug.LogError("Prefab do projétil não atribuído!"); return; }
+        if (animator != null) animator.SetTrigger("Ataque");
 
-        if (animator != null)
-            animator.SetTrigger("Ataque");
+        StartCoroutine(SpawnProjeteis());
+    }
 
+    IEnumerator SpawnProjeteis()
+    {
         float direcaoX = jogadorTransform.position.x > transform.position.x ? 1f : -1f;
         float anguloBase = direcaoX > 0 ? 60f : 120f;
 
         for (int j = 0; j < quantidadePorAtaque; j++)
         {
-            float t = quantidadePorAtaque > 1
-                ? (float)j / (quantidadePorAtaque - 1)
-                : 0.5f;
-
+            float t = quantidadePorAtaque > 1 ? (float)j / (quantidadePorAtaque - 1) : 0.5f;
             float anguloFinal = anguloBase + Mathf.Lerp(-espalhamento, espalhamento, t);
 
             Vector2 dir = new Vector2(
@@ -135,24 +131,18 @@ public class IAInimigoRonda : MonoBehaviour
                 Mathf.Sin(anguloFinal * Mathf.Deg2Rad)
             );
 
-            // Spawna 1 unidade acima do inimigo
             Vector3 posSpawn = transform.position + new Vector3(0, 1f, 0);
             GameObject proj = Instantiate(projetilPrefab, posSpawn, Quaternion.identity);
 
-            // ← DEBUG
-            Debug.Log($"Projétil criado: {proj.name} posição: {proj.transform.position}");
-
             ProjetilDano pd = proj.GetComponent<ProjetilDano>();
-
-            // ← DEBUG
-            Debug.Log($"ProjetilDano encontrado: {pd != null}");
-
             if (pd != null)
             {
                 pd.SetDono(gameObject);
                 pd.SetVelocidade(velocidadeProjeto);
                 pd.SetDirecao(dir);
             }
+
+            yield return new WaitForSeconds(0.05f); // pequeno delay entre cada bolinha
         }
     }
 
