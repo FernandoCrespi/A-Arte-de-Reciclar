@@ -156,7 +156,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "Cora\xE7\xE3o (1)_0": 6997960679802317656
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
