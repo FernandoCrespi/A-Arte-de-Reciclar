@@ -21,7 +21,7 @@ public class BotoesUI : MonoBehaviour
     void Start()
     {
         if (controle == null)
-            controle = FindObjectOfType<Controle>();
+            controle = FindFirstObjectByType<Controle>();
 
         Canvas canvas = GetOrCreateCanvas();
         CriarBotao(canvas, "ESQ", corMovimento, AnchorEsquerdo(0), tamanhoBotao, v => controle.btnEsquerda = v);
@@ -32,7 +32,7 @@ public class BotoesUI : MonoBehaviour
 
     Canvas GetOrCreateCanvas()
     {
-        Canvas c = FindObjectOfType<Canvas>();
+        Canvas c = FindFirstObjectByType<Canvas>();
         if (c != null) return c;
 
         GameObject go = new GameObject("Canvas_HUD");
@@ -47,7 +47,7 @@ public class BotoesUI : MonoBehaviour
 
         go.AddComponent<GraphicRaycaster>();
 
-        if (FindObjectOfType<EventSystem>() == null)
+        if (FindFirstObjectByType<EventSystem>() == null)
         {
             GameObject es = new GameObject("EventSystem");
             es.AddComponent<EventSystem>();
