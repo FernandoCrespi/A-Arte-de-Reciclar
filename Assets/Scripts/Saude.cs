@@ -11,6 +11,12 @@ public class Saude : MonoBehaviour
 
     private Animator animator;
 
+    [Header("Audio")]
+    public AudioClip somMorte;
+    public float volumeMorte = 1f;
+    public float iniciarEm = 0f;
+    private AudioSource audioSource;
+
     void Start()
     {
         morto = false;
