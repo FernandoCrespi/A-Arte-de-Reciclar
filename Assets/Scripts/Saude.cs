@@ -1,12 +1,14 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Saude : MonoBehaviour
 {
-    public bool morto;
-    public int saude = 100;
+    [Header("Configurações")]
+    public int saudeMaxima = 100;
+    public int saudeAtual;
+    public bool morto { get; private set; }
+
     private Animator animator;
 
     [Header("Audio")]
@@ -18,81 +20,69 @@ public class Saude : MonoBehaviour
     void Start()
     {
         morto = false;
-        animator = gameObject.GetComponent<Animator>();
-        audioSource = gameObject.GetComponent<AudioSource>();
-        if (audioSource == null)
-            audioSource = gameObject.AddComponent<AudioSource>();
+        saudeAtual = saudeMaxima;
+        animator = GetComponent<Animator>();
     }
 
-    void Update()
+    // Recebe dano normal
+    public void dano(int quantidade)
     {
+        if (morto) return;
+
+        saudeAtual -= quantidade;
+        saudeAtual = Mathf.Max(saudeAtual, 0); // Nunca vai abaixo de 0
+
+        if (saudeAtual <= 0)
+            Morrer();
     }
 
-    public void dano(int x)
-    {
-        saude -= x;
-        if (saude <= 0)
-        {
-            morto = true;
-            animator.SetTrigger("Morte");
-            TocarSomMorte();
-            GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
-
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            if (rb)
-            {
-                rb.velocity = Vector2.zero;
-                rb.simulated = false;
-            }
-            MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts)
-            {
-                if (script != this && script != animator)
-                    script.enabled = false;
-            }
-            if (gameObject.tag == "Player")
-                StartCoroutine(morre());
-        }
-    }
-
+    // Mata instantaneamente
     public void danoMax()
     {
-        saude = 0;
-        morto = true;
-        animator.SetTrigger("Morte");
-        TocarSomMorte();
+        if (morto) return;
+        saudeAtual = 0;
+        Morrer();
+    }
 
+    void Morrer()
+    {
+        morto = true;
+
+        // Toca animação de morte
+        if (animator != null)
+            animator.SetTrigger("Morte");
+
+        // Para o Rigidbody
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb)
+        if (rb != null)
         {
             rb.velocity = Vector2.zero;
             rb.simulated = false;
         }
+
+        // Desativa todos os scripts exceto este e o DestrutorPorTempo
         MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts)
         {
-            if (script != this && script != animator && script.GetType() != typeof(DestrutorPorTempo))
+            if (script != this && !(script is DestrutorPorTempo))
                 script.enabled = false;
         }
-        if (gameObject.tag == "Player")
-            StartCoroutine(morre());
+
+        // Inicia o destrutor se existir
+        GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
+
+        // Se for o player, reinicia a cena
+        if (gameObject.CompareTag("Player"))
+            StartCoroutine(ReiniciarCena());
     }
 
-    void TocarSomMorte()
+    IEnumerator ReiniciarCena()
     {
-        if (somMorte != null && audioSource != null)
-        {
-            audioSource.clip = somMorte;
-            audioSource.time = iniciarEm;
-            audioSource.Play();
-        }
-    }
+        yield return new WaitForSeconds(2f);
 
-    IEnumerator morre()
-    {
-        yield return new WaitForSeconds(2.0f);
         Coletor coletor = GetComponent<Coletor>();
         if (coletor != null) coletor.Resetar();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
