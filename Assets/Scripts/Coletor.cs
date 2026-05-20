@@ -27,6 +27,6 @@ public class Coletor : MonoBehaviour
     void AtualizarUI()
     {
         if (textoUI != null)
-            textoUI.text = "Moedas: " + total;
+            textoUI.text = ": " + total;
     }
 }

@@ -1,9 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro; // ← ADICIONE ISSO
 
 public class Saude : MonoBehaviour
 {
+    public bool morto;
+    public int saude = 100;
+    private int saudeMaxima; // ← ADICIONE
+    private Animator animator;
+
+    public TMP_Text textoVida; // ← ADICIONE (arraste o objeto "vida" aqui)
     [Header("Configurações")]
     public int saudeMaxima = 100;
     public int saudeAtual;
@@ -20,6 +27,15 @@ public class Saude : MonoBehaviour
     void Start()
     {
         morto = false;
+        saudeMaxima = saude; // ← ADICIONE
+        animator = gameObject.GetComponent<Animator>();
+        AtualizarUI(); // ← ADICIONE
+    }
+
+    void AtualizarUI()
+    {
+        if (textoVida != null)
+            textoVida.text = saude.ToString(); 
         saudeAtual = saudeMaxima;
         animator = GetComponent<Animator>();
     }
@@ -39,6 +55,28 @@ public class Saude : MonoBehaviour
     // Mata instantaneamente
     public void danoMax()
     {
+        saude -= x;
+        AtualizarUI(); // ← ADICIONE
+        if (saude <= 0)
+        {
+            morto = true;
+            animator.SetTrigger("Morte");
+            GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if (rb)
+            {
+                rb.velocity = Vector2.zero;
+                rb.simulated = false;
+            }
+            MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scripts)
+            {
+                if (script != this && script != animator)
+                    script.enabled = false;
+            }
+            if (gameObject.tag == "Player")
+                StartCoroutine(morre());
+        }
         if (morto) return;
         saudeAtual = 0;
         Morrer();
@@ -46,6 +84,10 @@ public class Saude : MonoBehaviour
 
     void Morrer()
     {
+        saude = 0;
+        AtualizarUI(); // ← ADICIONE
+        morto = true;
+        animator.SetTrigger("Morte");
         morto = true;
 
         // Toca animação de morte
@@ -59,6 +101,14 @@ public class Saude : MonoBehaviour
             rb.velocity = Vector2.zero;
             rb.simulated = false;
         }
+        MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in scripts)
+        {
+            if (script != this && script != animator && script.GetType() != typeof(DestrutorPorTempo))
+                script.enabled = false;
+        }
+        if (gameObject.tag == "Player")
+            StartCoroutine(morre());
 
         // Desativa todos os scripts exceto este e o DestrutorPorTempo
         MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
