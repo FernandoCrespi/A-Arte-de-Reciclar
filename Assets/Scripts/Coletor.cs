@@ -14,8 +14,11 @@ public class Coletor : MonoBehaviour
     public GameObject telaVitoria;
 
     [Header("Audio")]
+    public AudioSource musicaFundo; // arrasta o objeto "Audio Source" da fase aqui
     public AudioClip somMoeda;
     public float volumeMoeda = 1f;
+    public AudioClip musicaVitoria;
+    public float volumeVitoria = 1f;
     public AudioMixerGroup mixerGroup;
 
     private int total = 0;
@@ -48,6 +51,23 @@ public class Coletor : MonoBehaviour
         {
             if (telaVitoria != null)
                 telaVitoria.SetActive(true);
+
+            // Para a música de fundo
+            if (musicaFundo != null)
+                musicaFundo.Stop();
+
+            // Toca a música de vitória
+            if (musicaVitoria != null)
+            {
+                AudioSource audioVitoria = gameObject.AddComponent<AudioSource>();
+                audioVitoria.clip = musicaVitoria;
+                audioVitoria.volume = volumeVitoria;
+                audioVitoria.spatialBlend = 0f;
+                audioVitoria.ignoreListenerPause = true; // toca mesmo com timeScale = 0
+                audioVitoria.outputAudioMixerGroup = mixerGroup;
+                audioVitoria.Play();
+            }
+
             Time.timeScale = 0f;
         }
     }

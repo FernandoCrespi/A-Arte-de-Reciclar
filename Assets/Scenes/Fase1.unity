@@ -8371,9 +8371,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 24300002, guid: 9bea0a6d9208e3046a484189178c514b, type: 2}
     - target: {fileID: 3444786888739414219, guid: f12aea35ef5017d4584f19dab481d230, type: 3}
+      propertyPath: musicaFundo
+      value: 
+      objectReference: {fileID: 1799809494}
+    - target: {fileID: 3444786888739414219, guid: f12aea35ef5017d4584f19dab481d230, type: 3}
       propertyPath: telaVitoria
       value: 
       objectReference: {fileID: 1369926680}
+    - target: {fileID: 3444786888739414219, guid: f12aea35ef5017d4584f19dab481d230, type: 3}
+      propertyPath: musicaVitoria
+      value: 
+      objectReference: {fileID: 8300000, guid: 4dbfbd1a56081db4ca174255a4d56b1f, type: 3}
     - target: {fileID: 3444786888739414219, guid: f12aea35ef5017d4584f19dab481d230, type: 3}
       propertyPath: moedasParaVencer
       value: 9
