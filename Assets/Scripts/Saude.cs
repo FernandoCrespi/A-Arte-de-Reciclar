@@ -17,6 +17,7 @@ public class Saude : MonoBehaviour
     public GameObject telaGameOver;
 
     [Header("Audio")]
+    public AudioSource musicaFundo; // arrasta o "Audio Source" da fase aqui
     public AudioClip somMorte;
     public float volumeMorte = 1f;
     public float iniciarEm = 0f;
@@ -30,7 +31,6 @@ public class Saude : MonoBehaviour
         saudeAtual = saudeMaxima;
         animator = GetComponent<Animator>();
         AtualizarUI();
-
         if (telaGameOver != null) telaGameOver.SetActive(false);
     }
 
@@ -62,6 +62,10 @@ public class Saude : MonoBehaviour
     {
         morto = true;
 
+        // Para a música de fundo
+        if (musicaFundo != null)
+            musicaFundo.Stop();
+
         if (somMorte != null)
         {
             AudioSource audioTemp = gameObject.AddComponent<AudioSource>();
@@ -69,6 +73,7 @@ public class Saude : MonoBehaviour
             audioTemp.volume = volumeMorte;
             audioTemp.spatialBlend = 0f;
             audioTemp.time = iniciarEm;
+            audioTemp.ignoreListenerPause = true;
             audioTemp.outputAudioMixerGroup = mixerGroup;
             audioTemp.Play();
             Destroy(audioTemp, somMorte.length - iniciarEm);
@@ -100,10 +105,8 @@ public class Saude : MonoBehaviour
     IEnumerator MorrerPlayer()
     {
         yield return new WaitForSeconds(1f);
-
         if (telaGameOver != null)
             telaGameOver.SetActive(true);
-
         Time.timeScale = 0f;
     }
 }
