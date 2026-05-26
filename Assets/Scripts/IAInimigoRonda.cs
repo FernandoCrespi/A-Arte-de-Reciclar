@@ -1,98 +1,154 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class IAInimigoRonda : MonoBehaviour
 {
-    public GameObject inimigo;
-    public GameObject[] pontos;
-    public float velocidade = 5f;
-    public float espera = 0f;
+    [Header("Patrulha")]
+    public Transform[] pontos;
+    public float velocidade = 3f;
+    public float esperaEntreWaypoints = 1f;
     public bool loop = true;
-    public bool atacando = false;
 
-    private new Transform transform;
-    private int i = 0;
-    private float proxTempo;
-    private bool seMovendo;
+    [Header("Ataque Vulcão")]
+    public GameObject projetilPrefab;
+    public float alcanceDeteccao = 8f;
+    public float intervaloAtaque = 2f;
+    public int quantidadePorAtaque = 8;
+    public float espalhamento = 30f;
+    public float velocidadeProjeto = 15f;
+
+    private int indiceAtual = 0;
+    private bool aguardando = false;
+    private bool podeAtacar = true;
+    private Transform jogadorTransform;
     private Animator animator;
     private Saude saude;
-    private DashInimigo dash;
 
     void Start()
     {
-        transform = inimigo.transform;
-        proxTempo = 0f;
-        seMovendo = true;
         animator = GetComponent<Animator>();
-        saude = gameObject.GetComponent<Saude>();
-        dash = GetComponent<DashInimigo>();
+        saude = GetComponent<Saude>();
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+            jogadorTransform = player.transform;
+        else
+            Debug.LogWarning("Player não encontrado!");
     }
 
     void Update()
     {
-        if (saude == null) return;
+        if (saude != null && saude.morto) return;
+        if (jogadorTransform == null) { Patrulhar(); return; }
 
-        bool dashando = dash != null && dash.estaDashando;
+        float distancia = Vector2.Distance(transform.position, jogadorTransform.position);
 
-        if (!saude.morto && !dashando)
+        if (distancia <= alcanceDeteccao)
         {
-            if (Time.time >= proxTempo)
-            {
-                if (!seMovendo)
-                {
-                    Vector2 escala = transform.localScale;
-                    escala.x = escala.x * -1;
-                    transform.localScale = escala;
-                    seMovendo = true;
-                }
-            }
+            animator.SetBool("Correndo", false);
 
-            if (!atacando)
+            if (podeAtacar)
             {
-                movimenta();
+                podeAtacar = false;
+                StartCoroutine(CooldownAtaque());
+                AtaqueVulcao();
             }
+        }
+        else
+        {
+            Patrulhar();
         }
     }
 
-    void movimenta()
+    IEnumerator CooldownAtaque()
     {
-        if ((pontos.Length != 0) && (seMovendo))
+        yield return new WaitForSeconds(intervaloAtaque);
+        podeAtacar = true;
+    }
+
+    void Patrulhar()
+    {
+        if (pontos.Length == 0 || aguardando) return;
+        if (pontos[indiceAtual] == null) return;
+
+        Transform alvo = pontos[indiceAtual];
+        VirarParaAlvo(alvo.position);
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            alvo.position,
+            velocidade * Time.deltaTime
+        );
+
+        animator.SetBool("Correndo", true);
+
+        if (Vector3.Distance(transform.position, alvo.position) <= 0.05f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, pontos[i].transform.position, velocidade * Time.deltaTime);
-            animator.SetBool("Correndo", true);
-
-            if (Vector3.Distance(pontos[i].transform.position, transform.position) <= 0.1f)
-            {
-                i++;
-                proxTempo = Time.time + espera;
-                seMovendo = false;
-                animator.SetBool("Correndo", false);
-            }
-
-            if (i >= pontos.Length)
-            {
-                if (loop)
-                    i = 0;
-                else
-                    seMovendo = false;
-            }
+            animator.SetBool("Correndo", false);
+            StartCoroutine(AguardarWaypoint());
         }
     }
 
-    private void OnTriggerStay2D(Collider2D outro)
+    IEnumerator AguardarWaypoint()
     {
-        if (outro.gameObject.tag == "Player")
+        aguardando = true;
+        yield return new WaitForSeconds(esperaEntreWaypoints);
+        indiceAtual++;
+        if (indiceAtual >= pontos.Length)
+            indiceAtual = loop ? 0 : pontos.Length - 1;
+        aguardando = false;
+    }
+
+    void VirarParaAlvo(Vector3 alvoPos)
+    {
+        Vector3 escala = transform.localScale;
+        escala.x = alvoPos.x < transform.position.x
+            ? -Mathf.Abs(escala.x)
+            : Mathf.Abs(escala.x);
+        transform.localScale = escala;
+    }
+
+    void AtaqueVulcao()
+    {
+        if (projetilPrefab == null) { Debug.LogError("Prefab do projétil não atribuído!"); return; }
+        if (animator != null) animator.SetTrigger("Ataque");
+
+        StartCoroutine(SpawnProjeteis());
+    }
+
+    IEnumerator SpawnProjeteis()
+    {
+        float direcaoX = jogadorTransform.position.x > transform.position.x ? 1f : -1f;
+        float anguloBase = direcaoX > 0 ? 60f : 120f;
+
+        for (int j = 0; j < quantidadePorAtaque; j++)
         {
-            ataca();
+            float t = quantidadePorAtaque > 1 ? (float)j / (quantidadePorAtaque - 1) : 0.5f;
+            float anguloFinal = anguloBase + Mathf.Lerp(-espalhamento, espalhamento, t);
+
+            Vector2 dir = new Vector2(
+                Mathf.Cos(anguloFinal * Mathf.Deg2Rad),
+                Mathf.Sin(anguloFinal * Mathf.Deg2Rad)
+            );
+
+            Vector3 posSpawn = transform.position + new Vector3(0, 1f, 0);
+            GameObject proj = Instantiate(projetilPrefab, posSpawn, Quaternion.identity);
+
+            ProjetilDano pd = proj.GetComponent<ProjetilDano>();
+            if (pd != null)
+            {
+                pd.SetDono(gameObject);
+                pd.SetVelocidade(velocidadeProjeto);
+                pd.SetDirecao(dir);
+            }
+
+            yield return new WaitForSeconds(0.05f); // pequeno delay entre cada bolinha
         }
     }
 
-    public void ataca()
+    void OnDrawGizmosSelected()
     {
-        if (!atacando)
-        {
-            animator.SetTrigger("Ataque");
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, alcanceDeteccao);
     }
 }

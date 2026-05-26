@@ -1,66 +1,89 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
+using TMPro;
 
 public class Saude : MonoBehaviour
 {
-    public bool morto;
-    public int saude = 100;
+    [Header("Configurações")]
+    public int saudeMaxima = 100;
+    public int saudeAtual;
+    public bool morto { get; private set; }
+
+    [Header("UI")]
+    public TMP_Text textoVida;
+
+    [Header("Telas")]
+    public GameObject telaGameOver;
+
+    [Header("Audio")]
+    public AudioSource musicaFundo; // arrasta o "Audio Source" da fase aqui
+    public AudioClip somMorte;
+    public float volumeMorte = 1f;
+    public float iniciarEm = 0f;
+    public AudioMixerGroup mixerGroup;
+
     private Animator animator;
 
     void Start()
     {
         morto = false;
-        animator = gameObject.GetComponent<Animator>();
+        saudeAtual = saudeMaxima;
+        animator = GetComponent<Animator>();
+        AtualizarUI();
+        if (telaGameOver != null) telaGameOver.SetActive(false);
     }
 
-    void Update()
+    void AtualizarUI()
     {
+        if (textoVida != null)
+            textoVida.text = saudeAtual.ToString();
     }
 
-    public void dano(int x)
+    public void dano(int quantidade)
     {
-        saude -= x;
-        if (saude <= 0)
-        {
-            morto = true;
-            animator.SetTrigger("Morte");
-            GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
-
-            // === DESABILITA MOVIMENTO ===
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            if (rb)
-            {
-                rb.velocity = Vector2.zero;
-                rb.simulated = false;
-            }
-
-            MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts)
-            {
-                if (script != this && script != animator)
-                {
-                    script.enabled = false;
-                }
-            }
-
-            if (gameObject.tag == "Player")
-            {
-                StartCoroutine(morre());
-            }
-        }
+        if (morto) return;
+        saudeAtual -= quantidade;
+        saudeAtual = Mathf.Max(saudeAtual, 0);
+        AtualizarUI();
+        if (saudeAtual <= 0)
+            Morrer();
     }
 
     public void danoMax()
     {
-        saude = 0;
-        morto = true;
-        animator.SetTrigger("Morte");
+        if (morto) return;
+        saudeAtual = 0;
+        AtualizarUI();
+        Morrer();
+    }
 
-        // === DESABILITA MOVIMENTO ===
+    void Morrer()
+    {
+        morto = true;
+
+        // Para a música de fundo
+        if (musicaFundo != null)
+            musicaFundo.Stop();
+
+        if (somMorte != null)
+        {
+            AudioSource audioTemp = gameObject.AddComponent<AudioSource>();
+            audioTemp.clip = somMorte;
+            audioTemp.volume = volumeMorte;
+            audioTemp.spatialBlend = 0f;
+            audioTemp.time = iniciarEm;
+            audioTemp.ignoreListenerPause = true;
+            audioTemp.outputAudioMixerGroup = mixerGroup;
+            audioTemp.Play();
+            Destroy(audioTemp, somMorte.length - iniciarEm);
+        }
+
+        if (animator != null)
+            animator.SetTrigger("Morte");
+
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb)
+        if (rb != null)
         {
             rb.velocity = Vector2.zero;
             rb.simulated = false;
@@ -69,24 +92,21 @@ public class Saude : MonoBehaviour
         MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
         foreach (MonoBehaviour script in scripts)
         {
-            if (script != this && script != animator && script.GetType() != typeof(DestrutorPorTempo))
-            {
+            if (script != this && !(script is DestrutorPorTempo))
                 script.enabled = false;
-            }
         }
 
+        GetComponent<DestrutorPorTempo>()?.IniciarDestruicao();
 
-        if (gameObject.tag == "Player")
-        {
-            StartCoroutine(morre());
-        }
+        if (gameObject.CompareTag("Player"))
+            StartCoroutine(MorrerPlayer());
     }
 
-    IEnumerator morre()
+    IEnumerator MorrerPlayer()
     {
-        yield return new WaitForSeconds(2.0f);
-        Coletor coletor = GetComponent<Coletor>();
-        if (coletor != null) coletor.Resetar();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        yield return new WaitForSeconds(1f);
+        if (telaGameOver != null)
+            telaGameOver.SetActive(true);
+        Time.timeScale = 0f;
     }
 }
