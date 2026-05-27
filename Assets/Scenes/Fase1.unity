@@ -2346,7 +2346,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1038942219}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SairDoJogo
+        m_MethodName: VoltarMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5404,7 +5404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1369926681
 RectTransform:
   m_ObjectHideFlags: 0
