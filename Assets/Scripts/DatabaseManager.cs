@@ -4,12 +4,27 @@ using System.IO;
 using UnityEngine;
 using SQLite4Unity3d;
 
+/// <summary>
+/// Singleton que persiste entre todas as cenas (DontDestroyOnLoad).
+/// 
+/// FLUXO:
+/// 1. Ao fim da Fase 1 ? DatabaseManager.Instance.SalvarTempoFase(1, tempo)
+/// 2. Ao fim da Fase 2 ? DatabaseManager.Instance.SalvarTempoFase(2, tempo)
+/// 3. Ao fim da Fase 3 ? GameOverScreen chama SalvarTempoFase(3, tempo)
+///                       depois SalvarRegistroFinal(nome)
+/// </summary>
 public class DatabaseManager : MonoBehaviour
 {
     public static DatabaseManager Instance { get; private set; }
 
     private SQLiteConnection db;
 
+    // Tempos temporários guardados entre cenas
+    private float _fase1 = 0f;
+    private float _fase2 = 0f;
+    private float _fase3 = 0f;
+
+    // ?? AWAKE ?????????????????????????????????????????????
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -22,6 +37,7 @@ public class DatabaseManager : MonoBehaviour
         InicializarBancoDeDados();
     }
 
+    // ?? INICIALIZAR ???????????????????????????????????????
     private void InicializarBancoDeDados()
     {
         string caminho = Path.Combine(Application.persistentDataPath, "ranking.db");
@@ -32,25 +48,53 @@ public class DatabaseManager : MonoBehaviour
         Debug.Log("[DB] Tabela pronta.");
     }
 
-    public bool SalvarTempo(string nome, float fase1, float fase2, float fase3)
+    // ?? SALVAR TEMPO DE UMA FASE (chamado ao fim de cada cena) ??
+    /// <summary>
+    /// Chame isso ao fim de cada fase antes de trocar de cena.
+    /// Ex: DatabaseManager.Instance.SalvarTempoFase(1, timer.GetElapsedTime());
+    /// </summary>
+    public void SalvarTempoFase(int fase, float tempo)
+    {
+        switch (fase)
+        {
+            case 1: _fase1 = tempo; break;
+            case 2: _fase2 = tempo; break;
+            case 3: _fase3 = tempo; break;
+            default: Debug.LogWarning("[DB] Fase inválida: " + fase); return;
+        }
+        Debug.Log("[DB] Fase " + fase + " guardada: " + tempo.ToString("F2") + "s");
+    }
+
+    // ?? SALVAR REGISTRO FINAL (chamado na tela de Game Over) ??
+    /// <summary>
+    /// Chame isso depois de salvar a fase 3, passando o nome do jogador.
+    /// </summary>
+    public bool SalvarRegistroFinal(string nome)
     {
         nome = nome.ToUpper().Trim();
         if (nome.Length == 0 || nome.Length > 3)
         {
-            Debug.LogWarning("[DB] Nome invalido: use 1 a 3 letras.");
+            Debug.LogWarning("[DB] Nome inválido: use 1 a 3 letras.");
             return false;
         }
         try
         {
             EntradaRanking entrada = new EntradaRanking();
             entrada.Nome = nome;
-            entrada.Fase1 = fase1;
-            entrada.Fase2 = fase2;
-            entrada.Fase3 = fase3;
-            entrada.Total = fase1 + fase2 + fase3;
+            entrada.Fase1 = _fase1;
+            entrada.Fase2 = _fase2;
+            entrada.Fase3 = _fase3;
+            entrada.Total = _fase1 + _fase2 + _fase3;
             entrada.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             db.Insert(entrada);
-            Debug.Log("[DB] Salvo: " + nome);
+            Debug.Log("[DB] Registro salvo ? " + nome +
+                      " | F1:" + _fase1.ToString("F2") +
+                      " F2:" + _fase2.ToString("F2") +
+                      " F3:" + _fase3.ToString("F2") +
+                      " Total:" + entrada.Total.ToString("F2"));
+
+            // Limpa os tempos temporários para a próxima partida
+            _fase1 = _fase2 = _fase3 = 0f;
             return true;
         }
         catch (Exception e)
@@ -60,6 +104,16 @@ public class DatabaseManager : MonoBehaviour
         }
     }
 
+    // ?? SALVAR DIRETO (método antigo, mantido por compatibilidade) ??
+    public bool SalvarTempo(string nome, float fase1, float fase2, float fase3)
+    {
+        SalvarTempoFase(1, fase1);
+        SalvarTempoFase(2, fase2);
+        SalvarTempoFase(3, fase3);
+        return SalvarRegistroFinal(nome);
+    }
+
+    // ?? RANKING ???????????????????????????????????????????
     public List<EntradaRanking> ObterRanking(int limite)
     {
         try
@@ -81,33 +135,20 @@ public class DatabaseManager : MonoBehaviour
         {
             List<EntradaRanking> lista = db.Query<EntradaRanking>(
                 "SELECT * FROM EntradaRanking WHERE Nome = ? ORDER BY Total ASC LIMIT 1", nome);
-            if (lista.Count > 0)
-                return lista[0];
-            return null;
+            return lista.Count > 0 ? lista[0] : null;
         }
         catch (Exception e)
         {
-            Debug.LogError("[DB] Erro ao buscar melhor tempo: " + e.Message);
+            Debug.LogError("[DB] Erro: " + e.Message);
             return null;
         }
     }
 
     public void LimparRanking()
     {
-        try
-        {
-            db.DeleteAll<EntradaRanking>();
-            Debug.Log("[DB] Ranking limpo.");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("[DB] Erro ao limpar: " + e.Message);
-        }
+        try { db.DeleteAll<EntradaRanking>(); Debug.Log("[DB] Ranking limpo."); }
+        catch (Exception e) { Debug.LogError("[DB] Erro ao limpar: " + e.Message); }
     }
 
-    void OnDestroy()
-    {
-        if (db != null)
-            db.Close();
-    }
+    void OnDestroy() { db?.Close(); }
 }
