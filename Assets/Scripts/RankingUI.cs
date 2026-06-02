@@ -19,8 +19,8 @@ public class RankingUI : MonoBehaviour
     [Header("GameTimer (auto-detectado se vazio)")]
     public GameTimer gameTimer;
 
-    private float tempoFase1, tempoFase2, tempoFase3;
-    private bool fase1Ok, fase2Ok, fase3Ok;
+    private float tempoFase1, tempoFase2;
+    private bool fase1Ok, fase2Ok;
 
     void Awake()
     {
@@ -72,7 +72,6 @@ public class RankingUI : MonoBehaviour
         {
             case 1: tempoFase1 = t; fase1Ok = true; break;
             case 2: tempoFase2 = t; fase2Ok = true; break;
-            case 3: tempoFase3 = t; fase3Ok = true; break;
             default:
                 Debug.LogWarning("[RankingUI] Fase inválida: " + fase);
                 return;
@@ -91,19 +90,18 @@ public class RankingUI : MonoBehaviour
             return;
         }
 
-        if (!fase1Ok || !fase2Ok || !fase3Ok)
+        if (!fase1Ok || !fase2Ok)
         {
             string faltam = "";
             if (!fase1Ok) faltam += " F1";
             if (!fase2Ok) faltam += " F2";
-            if (!fase3Ok) faltam += " F3";
             Feedback("⚠ Complete as fases:" + faltam);
             return;
         }
 
-        bool ok = DatabaseManager.Instance.SalvarTempo(nome, tempoFase1, tempoFase2, tempoFase3);
+        bool ok = DatabaseManager.Instance.SalvarTempo(nome, tempoFase1, tempoFase2);
         if (ok)
-            Feedback("✔ " + nome + " salvo! Total: " + FormatarTempo(tempoFase1 + tempoFase2 + tempoFase3));
+            Feedback("✔ " + nome + " salvo! Total: " + FormatarTempo(tempoFase1 + tempoFase2));
         else
             Feedback("✖ Erro ao salvar.");
     }
@@ -122,17 +120,16 @@ public class RankingUI : MonoBehaviour
         else
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendLine("#   NOME  FASE 1    FASE 2    FASE 3    TOTAL");
-            sb.AppendLine("───────────────────────────────────────────────");
+            sb.AppendLine("#   NOME  FASE 1    FASE 2    TOTAL");
+            sb.AppendLine("──────────────────────────────────────");
             for (int i = 0; i < lista.Count; i++)
             {
                 EntradaRanking e = lista[i];
-                sb.AppendLine(string.Format("{0,-3} {1,-4}  {2,8}  {3,8}  {4,8}  {5,8}",
+                sb.AppendLine(string.Format("{0,-3} {1,-4}  {2,8}  {3,8}  {4,8}",
                     i + 1,
                     e.Nome,
                     FormatarTempo(e.Fase1),
                     FormatarTempo(e.Fase2),
-                    FormatarTempo(e.Fase3),
                     FormatarTempo(e.Total)));
             }
             textoRanking.text = sb.ToString();

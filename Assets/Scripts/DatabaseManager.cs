@@ -6,11 +6,10 @@ using SQLite4Unity3d;
 
 /// <summary>
 /// Singleton que persiste entre todas as cenas (DontDestroyOnLoad).
-/// 
+///
 /// FLUXO:
 /// 1. Ao fim da Fase 1 ? DatabaseManager.Instance.SalvarTempoFase(1, tempo)
 /// 2. Ao fim da Fase 2 ? DatabaseManager.Instance.SalvarTempoFase(2, tempo)
-/// 3. Ao fim da Fase 3 ? GameOverScreen chama SalvarTempoFase(3, tempo)
 ///                       depois SalvarRegistroFinal(nome)
 /// </summary>
 public class DatabaseManager : MonoBehaviour
@@ -22,9 +21,8 @@ public class DatabaseManager : MonoBehaviour
     // Tempos temporários guardados entre cenas
     private float _fase1 = 0f;
     private float _fase2 = 0f;
-    private float _fase3 = 0f;
 
-    // ?? AWAKE ?????????????????????????????????????????????
+    // ?? AWAKE ????????????????????????????????????????????????
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -37,7 +35,7 @@ public class DatabaseManager : MonoBehaviour
         InicializarBancoDeDados();
     }
 
-    // ?? INICIALIZAR ???????????????????????????????????????
+    // ?? INICIALIZAR ??????????????????????????????????????????
     private void InicializarBancoDeDados()
     {
         string caminho = Path.Combine(Application.persistentDataPath, "ranking.db");
@@ -48,10 +46,11 @@ public class DatabaseManager : MonoBehaviour
         Debug.Log("[DB] Tabela pronta.");
     }
 
-    // ?? SALVAR TEMPO DE UMA FASE (chamado ao fim de cada cena) ??
+    // ?? SALVAR TEMPO DE UMA FASE ?????????????????????????????
     /// <summary>
-    /// Chame isso ao fim de cada fase antes de trocar de cena.
+    /// Chame ao fim de cada fase antes de trocar de cena.
     /// Ex: DatabaseManager.Instance.SalvarTempoFase(1, timer.GetElapsedTime());
+    /// Na Fase 2, chame também SalvarRegistroFinal(nome) logo depois.
     /// </summary>
     public void SalvarTempoFase(int fase, float tempo)
     {
@@ -59,15 +58,17 @@ public class DatabaseManager : MonoBehaviour
         {
             case 1: _fase1 = tempo; break;
             case 2: _fase2 = tempo; break;
-            case 3: _fase3 = tempo; break;
-            default: Debug.LogWarning("[DB] Fase inválida: " + fase); return;
+            default:
+                Debug.LogWarning("[DB] Fase inválida: " + fase);
+                return;
         }
         Debug.Log("[DB] Fase " + fase + " guardada: " + tempo.ToString("F2") + "s");
     }
 
-    // ?? SALVAR REGISTRO FINAL (chamado na tela de Game Over) ??
+    // ?? SALVAR REGISTRO FINAL ????????????????????????????????
     /// <summary>
-    /// Chame isso depois de salvar a fase 3, passando o nome do jogador.
+    /// Chame depois de SalvarTempoFase(2, tempo), passando o nome do jogador.
+    /// O nome deve ter entre 1 e 3 letras maiúsculas (estilo ranking arcade).
     /// </summary>
     public bool SalvarRegistroFinal(string nome)
     {
@@ -83,18 +84,17 @@ public class DatabaseManager : MonoBehaviour
             entrada.Nome = nome;
             entrada.Fase1 = _fase1;
             entrada.Fase2 = _fase2;
-            entrada.Fase3 = _fase3;
-            entrada.Total = _fase1 + _fase2 + _fase3;
+            entrada.Total = _fase1 + _fase2;
             entrada.Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             db.Insert(entrada);
+
             Debug.Log("[DB] Registro salvo ? " + nome +
                       " | F1:" + _fase1.ToString("F2") +
                       " F2:" + _fase2.ToString("F2") +
-                      " F3:" + _fase3.ToString("F2") +
                       " Total:" + entrada.Total.ToString("F2"));
 
-            // Limpa os tempos temporários para a próxima partida
-            _fase1 = _fase2 = _fase3 = 0f;
+            // Limpa os tempos para a próxima partida
+            _fase1 = _fase2 = 0f;
             return true;
         }
         catch (Exception e)
@@ -104,16 +104,19 @@ public class DatabaseManager : MonoBehaviour
         }
     }
 
-    // ?? SALVAR DIRETO (método antigo, mantido por compatibilidade) ??
-    public bool SalvarTempo(string nome, float fase1, float fase2, float fase3)
+    // ?? SALVAR DIRETO (atalho conveniente) ???????????????????
+    /// <summary>
+    /// Registra as duas fases e salva tudo de uma vez.
+    /// Útil se você tiver os dois tempos disponíveis ao mesmo tempo.
+    /// </summary>
+    public bool SalvarTempo(string nome, float fase1, float fase2)
     {
         SalvarTempoFase(1, fase1);
         SalvarTempoFase(2, fase2);
-        SalvarTempoFase(3, fase3);
         return SalvarRegistroFinal(nome);
     }
 
-    // ?? RANKING ???????????????????????????????????????????
+    // ?? RANKING ??????????????????????????????????????????????
     public List<EntradaRanking> ObterRanking(int limite)
     {
         try
@@ -146,7 +149,11 @@ public class DatabaseManager : MonoBehaviour
 
     public void LimparRanking()
     {
-        try { db.DeleteAll<EntradaRanking>(); Debug.Log("[DB] Ranking limpo."); }
+        try
+        {
+            db.DeleteAll<EntradaRanking>();
+            Debug.Log("[DB] Ranking limpo.");
+        }
         catch (Exception e) { Debug.LogError("[DB] Erro ao limpar: " + e.Message); }
     }
 

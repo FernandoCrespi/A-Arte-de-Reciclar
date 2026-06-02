@@ -5,7 +5,7 @@ using TMPro;
 /// <summary>
 /// Coloque na tela de fim de jogo (última fase).
 /// Quando ShowEndScreen() for chamado, para o timer,
-/// salva o tempo da fase 3 e mostra o painel com input de nome.
+/// salva o tempo da fase 2 e mostra o painel com input de nome.
 /// </summary>
 public class GameOverScreen : MonoBehaviour
 {
@@ -26,16 +26,15 @@ public class GameOverScreen : MonoBehaviour
         timerAtual = timer;
         timer.StopTimer();
 
-        // Salva o tempo da fase 3 no DatabaseManager
+        // Salva o tempo da fase 2 (última fase) no DatabaseManager
         if (DatabaseManager.Instance != null)
-            DatabaseManager.Instance.SalvarTempoFase(3, timer.GetElapsedTime());
+            DatabaseManager.Instance.SalvarTempoFase(2, timer.GetElapsedTime());
         else
             Debug.LogWarning("[GameOverScreen] DatabaseManager não encontrado!");
 
         finalTimeText.text = "Seu tempo: " + timer.GetFormattedTime();
         panel.SetActive(true);
 
-        // Configura o input
         if (inputNome != null)
         {
             inputNome.characterLimit = 3;
@@ -63,7 +62,6 @@ public class GameOverScreen : MonoBehaviour
         }
 
         bool ok = DatabaseManager.Instance.SalvarRegistroFinal(nome);
-
         if (textoFeedback != null)
             textoFeedback.text = ok
                 ? "? " + nome + " salvo no ranking!"

@@ -60,10 +60,8 @@ public class RankingMenuUI : MonoBehaviour
         for (int i = 0; i < lista.Count; i++)
         {
             EntradaRanking e = lista[i];
-
             GameObject linha = Instantiate(prefabLinha, containerLinhas);
             LinhaRanking comp = linha.GetComponent<LinhaRanking>();
-
             if (comp != null)
             {
                 comp.Preencher(
@@ -71,7 +69,6 @@ public class RankingMenuUI : MonoBehaviour
                     nome: e.Nome,
                     fase1: e.Fase1,
                     fase2: e.Fase2,
-                    fase3: e.Fase3,
                     total: e.Total
                 );
             }
