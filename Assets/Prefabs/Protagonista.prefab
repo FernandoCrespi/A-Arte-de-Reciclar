@@ -116,6 +116,10 @@ MonoBehaviour:
   teclaEsquerda: 97
   teclaPulo: 32
   teclaAtaque: 101
+  btnDireita: 0
+  btnEsquerda: 0
+  btnPulo: 0
+  btnAtaque: 0
 --- !u!50 &2348345030625650422
 Rigidbody2D:
   serializedVersion: 4
@@ -214,8 +218,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf88443c7713cc43bf705140a229e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  morto: 0
-  saude: 3
+  saudeMaxima: 3
+  saudeAtual: 3
+  textoVida: {fileID: 0}
+  telaGameOver: {fileID: 0}
+  tempoPiscar: 0.1
+  quantidadePiscar: 2
+  musicaFundo: {fileID: 0}
+  somMorte: {fileID: 8300000, guid: 12dac71c8045d0143a0cb2b08afb7266, type: 3}
+  volumeMorte: 1
+  iniciarEm: 0.8
+  mixerGroup: {fileID: 24300002, guid: 9bea0a6d9208e3046a484189178c514b, type: 2}
 --- !u!114 &3444786888739414219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +242,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textoUI: {fileID: 0}
+  moedasParaVencer: 13
+  telaVitoria: {fileID: 0}
+  musicaFundo: {fileID: 0}
+  somMoeda: {fileID: 8300000, guid: c4315a324800df045b37b614f9bc88dd, type: 3}
+  volumeMoeda: 1
+  musicaVitoria: {fileID: 8300000, guid: 4dbfbd1a56081db4ca174255a4d56b1f, type: 3}
+  volumeVitoria: 1
+  mixerGroup: {fileID: 24300002, guid: 9bea0a6d9208e3046a484189178c514b, type: 2}
 --- !u!1 &6338319492730101878
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,20 +16,26 @@ public class Saude : MonoBehaviour
     [Header("Telas")]
     public GameObject telaGameOver;
 
+    [Header("Dano Visual")]
+    public float tempoPiscar = 0.1f;
+    public int quantidadePiscar = 3;
+
     [Header("Audio")]
-    public AudioSource musicaFundo; // arrasta o "Audio Source" da fase aqui
+    public AudioSource musicaFundo;
     public AudioClip somMorte;
     public float volumeMorte = 1f;
     public float iniciarEm = 0f;
     public AudioMixerGroup mixerGroup;
 
     private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
         morto = false;
         saudeAtual = saudeMaxima;
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         AtualizarUI();
         if (telaGameOver != null) telaGameOver.SetActive(false);
     }
@@ -46,6 +52,8 @@ public class Saude : MonoBehaviour
         saudeAtual -= quantidade;
         saudeAtual = Mathf.Max(saudeAtual, 0);
         AtualizarUI();
+        if (gameObject.CompareTag("Player"))
+            StartCoroutine(PiscarVermelho());
         if (saudeAtual <= 0)
             Morrer();
     }
@@ -58,11 +66,21 @@ public class Saude : MonoBehaviour
         Morrer();
     }
 
+    IEnumerator PiscarVermelho()
+    {
+        for (int i = 0; i < quantidadePiscar; i++)
+        {
+            spriteRenderer.color = Color.red;
+            yield return new WaitForSeconds(tempoPiscar);
+            spriteRenderer.color = Color.white;
+            yield return new WaitForSeconds(tempoPiscar);
+        }
+    }
+
     void Morrer()
     {
         morto = true;
 
-        // Para a música de fundo
         if (musicaFundo != null)
             musicaFundo.Stop();
 
