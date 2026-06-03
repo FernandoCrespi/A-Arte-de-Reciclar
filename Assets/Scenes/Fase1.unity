@@ -3381,10 +3381,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\xD3timo trabalho na coleta!\nGra\xE7as aos seus esfor\xE7os, toneladas
-    de papel foram salvas do lixo comum e encaminhadas para a reciclagem certa. Isso
-    significa menos \xE1rvores derrubadas e um futuro muito mais verde para a nossa
-    cidade!"
+  m_text: "<b>\xD3timo trabalho na coleta!</b>\nGra\xE7as aos seus esfor\xE7os, toneladas
+    de <color=#00FFFF>papel</color> foram salvas do lixo comum e encaminhadas para
+    a reciclagem certa. Isso significa menos \xE1rvores derrubadas e um futuro muito
+    mais <color=#00FF00>verde </color>para a nossa cidade!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 897abf3ef58a6f349860072e620eb322, type: 2}
   m_sharedMaterial: {fileID: -681291455687870150, guid: 897abf3ef58a6f349860072e620eb322, type: 2}
@@ -6436,9 +6436,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "O pl\xE1stico est\xE1 poluindo os nossos oceanos e bueiros. Prepare a
-    lixeira vermelha, ajuste seus reflexos e n\xE3o deixe nenhum pl\xE1stico para
-    tr\xE1s!"
+  m_text: "O <color=#FF0000>pl\xE1stico</color> est\xE1 poluindo os nossos oceanos
+    e bueiros. Prepare a lixeira vermelha, ajuste seus reflexos e n\xE3o deixe nenhum
+    pl\xE1stico para tr\xE1s!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 897abf3ef58a6f349860072e620eb322, type: 2}
   m_sharedMaterial: {fileID: -681291455687870150, guid: 897abf3ef58a6f349860072e620eb322, type: 2}
@@ -6732,7 +6732,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1369926681
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6770,7 +6770,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5518868, g: 0.58344007, b: 1, a: 0.392}
+  m_Color: {r: 0.6179246, g: 0.6447368, b: 1, a: 0.392}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
