@@ -1,21 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class GameOverScreen : MonoBehaviour
 {
     [Header("UI")]
-    public TextMeshProUGUI finalTimeText;
     public GameObject panel;
+    public TextMeshProUGUI finalTimeText;
     public TextMeshProUGUI textoFeedback;
-
-    [Header("Tempos por fase (opcional)")]
-    public TextMeshProUGUI textoFase1;
-    public TextMeshProUGUI textoFase2;
-    public TextMeshProUGUI textoFase3;
-
-    [Header("Botao sair")]
-    public Button btnSair;
 
     public void ShowEndScreen(GameTimer timer)
     {
@@ -35,13 +26,7 @@ public class GameOverScreen : MonoBehaviour
             bool ok = DatabaseManager.Instance.SalvarRegistroFinal();
 
             if (textoFeedback != null)
-                textoFeedback.text = ok
-                    ? nome + " SALVO NO RANKING!"
-                    : "ERRO AO SALVAR.";
-
-            if (textoFase1 != null) textoFase1.text = "FASE 1: " + Formatar(f1);
-            if (textoFase2 != null) textoFase2.text = "FASE 2: " + Formatar(f2);
-            if (textoFase3 != null) textoFase3.text = "FASE 3: " + Formatar(f3);
+                textoFeedback.text = ok ? nome + " SALVO NO RANKING!" : "ERRO AO SALVAR.";
 
             if (finalTimeText != null)
                 finalTimeText.text = "TOTAL: " + Formatar(f1 + f2 + f3);
@@ -59,8 +44,8 @@ public class GameOverScreen : MonoBehaviour
 
     private string Formatar(float t)
     {
-        int min   = (int)(t % 3600 / 60);
-        int sec   = (int)(t % 60);
+        int min = (int)(t % 3600 / 60);
+        int sec = (int)(t % 60);
         int milli = (int)((t % 1) * 100);
         return string.Format("{0:00}:{1:00}.{2:00}", min, sec, milli);
     }
