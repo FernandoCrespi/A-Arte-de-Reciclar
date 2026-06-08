@@ -29,7 +29,7 @@ public class GameOverScreen : MonoBehaviour
                 textoFeedback.text = ok ? nome + " SALVO NO RANKING!" : "ERRO AO SALVAR.";
 
             if (finalTimeText != null)
-                finalTimeText.text = "TOTAL: " + Formatar(f1 + f2 + f3);
+                finalTimeText.text = Formatar(f1 + f2 + f3);
         }
         else
         {

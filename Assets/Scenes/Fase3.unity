@@ -3765,7 +3765,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "DEPOIS DE LIMPAR TODO O <color=#00FFFF>PAPEL</color> NA FASE AZUL E RECOLHER
     O <color=red>PL\xC1STICO</color> NA FASE VERMELHA, VOC\xCA FINALIZOU SUA JORNADA
-    DE DETONANDO O DESPERD\xCDCIO NA ZONA DE <color=#8B4513>LIXO ORG\xC2NICO</color>!"
+    DETONANDO O DESPERD\xCDCIO NA ZONA DE <color=#8B4513>LIXO ORG\xC2NICO</color>!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 897abf3ef58a6f349860072e620eb322, type: 2}
   m_sharedMaterial: {fileID: -681291455687870150, guid: 897abf3ef58a6f349860072e620eb322, type: 2}
@@ -6942,7 +6942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1369926681
 RectTransform:
   m_ObjectHideFlags: 0
