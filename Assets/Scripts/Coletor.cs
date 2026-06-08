@@ -13,8 +13,12 @@ public class Coletor : MonoBehaviour
     [Header("Telas")]
     public GameObject telaVitoria;
 
+    [Header("Game Over Screen (sÃ³ na Fase 3)")]
+    public GameOverScreen gameOverScreen;
+    public GameTimer gameTimer;
+
     [Header("Audio")]
-    public AudioSource musicaFundo; // arrasta o objeto "Audio Source" da fase aqui
+    public AudioSource musicaFundo;
     public AudioClip somMoeda;
     public float volumeMoeda = 1f;
     public AudioClip musicaVitoria;
@@ -28,6 +32,11 @@ public class Coletor : MonoBehaviour
         Resetar();
         AtualizarUI();
         if (telaVitoria != null) telaVitoria.SetActive(false);
+
+        if (gameTimer == null)
+            gameTimer = Object.FindFirstObjectByType<GameTimer>();
+        if (gameOverScreen == null)
+            gameOverScreen = Object.FindFirstObjectByType<GameOverScreen>();
     }
 
     public void Coletar()
@@ -49,21 +58,22 @@ public class Coletor : MonoBehaviour
 
         if (total >= moedasParaVencer)
         {
-            if (telaVitoria != null)
+            // SÃ³ salva no banco na Fase 3
+            if (gameOverScreen != null && gameTimer != null)
+                gameOverScreen.ShowEndScreen(gameTimer);
+            else if (telaVitoria != null)
                 telaVitoria.SetActive(true);
 
-            // Para a música de fundo
             if (musicaFundo != null)
                 musicaFundo.Stop();
 
-            // Toca a música de vitória
             if (musicaVitoria != null)
             {
                 AudioSource audioVitoria = gameObject.AddComponent<AudioSource>();
                 audioVitoria.clip = musicaVitoria;
                 audioVitoria.volume = volumeVitoria;
                 audioVitoria.spatialBlend = 0f;
-                audioVitoria.ignoreListenerPause = true; // toca mesmo com timeScale = 0
+                audioVitoria.ignoreListenerPause = true;
                 audioVitoria.outputAudioMixerGroup = mixerGroup;
                 audioVitoria.Play();
             }

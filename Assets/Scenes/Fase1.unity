@@ -1904,6 +1904,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2296140226998706210, guid: 1709782da3ca5fd418fa4b04b234032b, type: 3}
   m_PrefabInstance: {fileID: 535721897}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &465474674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 465474676}
+  - component: {fileID: 465474675}
+  m_Layer: 0
+  m_Name: GameTimer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &465474675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465474674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab07cd25bfc11fe48b3ed508253368a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerText: {fileID: 1601054868}
+--- !u!4 &465474676
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465474674}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 64.06592, y: 85.08715, z: -0.78157026}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &468655651 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3372239806494171316, guid: 86daed6c40a09e84998e2e00b0ff742b, type: 3}
@@ -4782,6 +4827,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d9c5c6e4bce2634ab52aff825faff33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faseAtual: 1
+  gameTimer: {fileID: 465474675}
 --- !u!4 &1064669504 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2049629271459422086, guid: e8e4294518573964fb7d99ed431f5f61, type: 3}
@@ -5185,6 +5232,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d9c5c6e4bce2634ab52aff825faff33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faseAtual: 0
+  gameTimer: {fileID: 0}
 --- !u!1001 &1124943051
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11006,3 +11055,4 @@ SceneRoots:
   - {fileID: 1965991215}
   - {fileID: 485985311}
   - {fileID: 284639658}
+  - {fileID: 465474676}
