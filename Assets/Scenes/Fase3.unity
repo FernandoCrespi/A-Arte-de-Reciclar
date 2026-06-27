@@ -12405,10 +12405,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LixeiraOrganico
       objectReference: {fileID: 0}
-    - target: {fileID: 3623684080109408763, guid: 169402970359e354b985b6d6be793f74, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 7231149053959131592, guid: 169402970359e354b985b6d6be793f74, type: 3}
       propertyPath: m_LocalPosition.x
       value: -13.55
