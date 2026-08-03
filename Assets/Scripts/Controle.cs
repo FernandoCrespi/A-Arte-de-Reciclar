@@ -13,7 +13,6 @@ public class Controle : MonoBehaviour
     public KeyCode teclaPulo = KeyCode.Space;
     public KeyCode teclaAtaque = KeyCode.J;
 
-    // Inputs mobile (setados pelo ControleUI)
     [HideInInspector] public bool btnDireita = false;
     [HideInInspector] public bool btnEsquerda = false;
     [HideInInspector] public bool btnPulo = false;
@@ -29,6 +28,12 @@ public class Controle : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+
+        // Carrega teclas salvas
+        teclaDireita = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("teclaDireita", teclaDireita.ToString()));
+        teclaEsquerda = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("teclaEsquerda", teclaEsquerda.ToString()));
+        teclaPulo = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("teclaPulo", teclaPulo.ToString()));
+        teclaAtaque = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("teclaAtaque", teclaAtaque.ToString()));
     }
 
     void Update()
@@ -45,8 +50,6 @@ public class Controle : MonoBehaviour
     void moveJogador()
     {
         moveX = 0;
-
-        // Teclado OU botão mobile
         if (Input.GetKey(teclaDireita) || btnDireita)
             moveX = 1;
         if (Input.GetKey(teclaEsquerda) || btnEsquerda)
@@ -54,23 +57,16 @@ public class Controle : MonoBehaviour
 
         noChao = Physics2D.Linecast(transform.position, terra.position, chao);
 
-        // Pulo: teclado OU botão mobile
         if ((Input.GetKeyDown(teclaPulo) || btnPulo) && noChao)
-        {
             pula();
-        }
 
-        // Reseta o pulo mobile após um frame
         btnPulo = false;
-
         rb.velocity = new Vector2(moveX * velocidade, rb.velocity.y);
-
         Physics2D.IgnoreLayerCollision(
             this.gameObject.layer,
             LayerMask.NameToLayer("chao"),
             (rb.velocity.y > 0.0f)
         );
-
         animator.SetBool("noChao", noChao);
         animator.SetBool("Correndo", moveX != 0);
     }
@@ -98,11 +94,7 @@ public class Controle : MonoBehaviour
     void Atacar()
     {
         if (Input.GetKeyDown(teclaAtaque) || btnAtaque)
-        {
             animator.SetTrigger("Ataque");
-        }
-
-        // Reseta o ataque mobile após um frame
         btnAtaque = false;
     }
 }
